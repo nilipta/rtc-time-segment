@@ -4,8 +4,6 @@
 #include <util/delay.h>
 
 
-#include "01seven.h"
-
 //common anode
 //      H      G     F     E     D     C     B     A
 //_____________________________________________
@@ -19,9 +17,6 @@
 //7   0     1     1     1   ||  1     0     0     0           =   78
 //8   0     0     0     0   ||  0     0     0     0           =   00
 //9   0     0     0     1   ||  0     0     0     0           =   10
-
-#define one 0xF9
-#define seg1 0x80
 
 int numArrayDot[] = {0x40 ,  0x79 ,  0x24 ,  0x30 ,  0x19 ,  0x12 ,  0x02 ,  0x78 ,  0x00 ,  0x10 }; //with dots
 int numArray[] = {0xC0 ,  0xF9 ,  0xA4 ,  0xB0 ,  0x99 ,  0x92 ,  0x82 ,  0xF8 ,  0x80 ,  0x90 }; //with dots
@@ -50,16 +45,6 @@ gnd                        <11                                30>             VC
                               <19                                22>
                               <20                                21>               
 *****************************************************************************/
-
-void delay(int count)
-{
-      int a = 0;
-      daley1:
-          a++;
-          
-       if(a<count)
-           goto daley1;                 
-}
 
 void seven_disp()
 {
@@ -146,7 +131,7 @@ void seven_disp()
                  PORTC = 0x10;  
       
                  _delay_ms (1);
-              }
+           }
 }
 
 void parser(int a, int b, int c, int d)
@@ -221,7 +206,7 @@ int main()
    DDRA = 0xff;
    DDRC = 0xff;
    
-   parser(3, 5, 6, 9);
+   parser(0, 5, 5, 9);
    
    while(1)
    {
