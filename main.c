@@ -23,7 +23,8 @@
 #define one 0xF9
 #define seg1 0x80
 
-int numArray[] = {0x40 ,  0x79 ,  0x24 ,  0x30 ,  0x19 ,  0x12 ,  0x02 ,  0x78 ,  0x00 ,  0x10 };
+int numArrayDot[] = {0x40 ,  0x79 ,  0x24 ,  0x30 ,  0x19 ,  0x12 ,  0x02 ,  0x78 ,  0x00 ,  0x10 }; //with dots
+int numArray[] = {0xC0 ,  0xF9 ,  0xA4 ,  0xB0 ,  0x99 ,  0x92 ,  0x82 ,  0xF8 ,  0x80 ,  0x90 }; //with dots
 int segArray[]={0x70,0xB0, 0xD0, 0xE0};
 int posSeg[4] = {0x40, 0x79, 0x24, 0x30}; 
 
@@ -158,29 +159,60 @@ void parser(int a, int b, int c, int d)
    
    for(int pos = 0; pos <4; pos++)
    {
-      switch(nums[pos])
+      if(pos==1)
       {
-         case 0:  posSeg[pos] = numArray[0];
-                  break;
-         case 1:  posSeg[pos] = numArray[1];
-                  break;                  
-         case 2:  posSeg[pos] = numArray[2];
-                  break;
-         case 3:  posSeg[pos] = numArray[3];
-                  break;
-         case 4:  posSeg[pos] = numArray[4];
-                  break;
-         case 5:  posSeg[pos] = numArray[5];
-                  break;                  
-         case 6:  posSeg[pos] = numArray[6];
-                  break;
-         case 7:  posSeg[pos] = numArray[7];
-                  break;                                    
-         case 8:  posSeg[pos] = numArray[8];
-                  break;
-         case 9:  posSeg[pos] = numArray[9];
-                  break;                  
+         switch(nums[pos])
+         {
+            case 0:  posSeg[pos] = numArrayDot[0];
+                     break;
+            case 1:  posSeg[pos] = numArrayDot[1];
+                     break;                  
+            case 2:  posSeg[pos] = numArrayDot[2];
+                     break;
+            case 3:  posSeg[pos] = numArrayDot[3];
+                     break;
+            case 4:  posSeg[pos] = numArrayDot[4];
+                     break;
+            case 5:  posSeg[pos] = numArrayDot[5];
+                     break;                  
+            case 6:  posSeg[pos] = numArrayDot[6];
+                     break;
+            case 7:  posSeg[pos] = numArrayDot[7];
+                     break;                                    
+            case 8:  posSeg[pos] = numArrayDot[8];
+                     break;
+            case 9:  posSeg[pos] = numArrayDot[9];
+                     break;                  
+         }
       }
+      
+      else
+      {
+         switch(nums[pos])
+         {
+            case 0:  posSeg[pos] = numArray[0];
+                     break;
+            case 1:  posSeg[pos] = numArray[1];
+                     break;                  
+            case 2:  posSeg[pos] = numArray[2];
+                     break;
+            case 3:  posSeg[pos] = numArray[3];
+                     break;
+            case 4:  posSeg[pos] = numArray[4];
+                     break;
+            case 5:  posSeg[pos] = numArray[5];
+                     break;                  
+            case 6:  posSeg[pos] = numArray[6];
+                     break;
+            case 7:  posSeg[pos] = numArray[7];
+                     break;                                    
+            case 8:  posSeg[pos] = numArray[8];
+                     break;
+            case 9:  posSeg[pos] = numArray[9];
+                     break;                  
+         }
+      }
+      
    }
 }
 
