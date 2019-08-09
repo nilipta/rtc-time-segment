@@ -1,0 +1,233 @@
+    1  sudo apt autoremove mathematica
+    2  sudo apt autoremove wolfram-engine
+    3  cat /etc/wpa_supplicant/wpa_supplicant.conf 
+    4  sudo apt autoremove office
+    5  sudo apt autoremove libre-office
+    6  sudo apt autoremove libre
+    7  sudo apt autoremove libreoffice
+    8  sudo apt-get update
+    9  sudo apt search vnc
+   10  sudo dpkg -i VNC-Viewer-6.19.715-Linux-ARM.deb 
+   11  ifconfig
+   12  ifconfig eth0
+   13  sudo rapsi-config
+   14  sudo raspi-config
+   15  lsusb
+   16  dmesg
+   17  ls /var/cache/apt/archives/
+   18  sudo apt-get install avrdude
+   19  sudo apt-get update
+   20  ping google.com
+   21  ls /dev
+   22  dmesg
+   23  sudo apt-get install avrdude
+   24  ls /var/cache/apt/archives/
+   25  sudo cp /var/cache/apt/archives/* ~/Downloads/9Debs/
+   26  mkdr ~/Downloads/9Debs/avrdude
+   27  mkdir ~/Downloads/9Debs/avrdude
+   28  ls /var/cache/apt/archives/
+   29  sudo apt clean
+   30  mkdir ~/Downloads/9Debs/avrdude
+   31  ls /var/cache/apt/archives/
+   32  avrdude -c usbasp -p m16
+   33  sudo echo "SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", SYSFS{idVendor}=="16c0", SYSFS{idProduct}=="05dc", MODE="0666"" /etc/udev/rules.d/99-USBasp.rules
+   34  ls /etc/udev/rules.d/
+   35  sudo echo "SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", SYSFS{idVendor}=="16c0", SYSFS{idProduct}=="05dc", MODE="0666"" > /etc/udev/rules.d/99-USBasp.rules
+   36  sudo echo "SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", SYSFS{idVendor}=="16c0", SYSFS{idProduct}=="05dc", MODE="0666"" > 99-USBasp.rules
+   37  ls
+   38  sudo mv 99-USBasp.rules /etc/udev/rules.d/
+   39  ls
+   40  ls /etc/udev/rules.d/
+   41  /etc/init.d/udev restart
+   42  avrdude -c usbasp -p m16
+   43  sudo avrdude -c usbasp -p m16
+   44  sudo raspi-config
+   45  exit
+   46  ifconfig eth0
+   47  mkdir Downloads/9Debs/transmission
+   48  sudo apt-get install transmission-daemon
+   49  sudo cp /var/cache/apt/archives/* ~/Downloads/9Debs/transmission/
+   50  ls /var/cache/apt/archives/
+   51  sudo apt clean
+   52  ls /var/cache/apt/archives/
+   53  sudo systemctl stop transmission-daemon.service 
+   54  sudo nano /etc/transmission-daemon/settings.json 
+   55  mkdir torrent
+   56  sudo nano /etc/transmission-daemon/settings.json 
+   57  sudo systemctl restart transmission-daemon.service
+   58  sudo systemctl status transmission-daemon.service
+   59  sudo usermod -a -G debian-transmission pi
+   60  sudo chgrp debian-transmission /home/pi/torrent/
+   61  sudo chmod 770 /home/pi/torrent/
+   62  sudo service transmission-daemon stop
+   63  sudo nano /etc/transmission-daemon/settings.json
+   64  sudo service transmission-daemon start
+   65  sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc
+   66  mkdir Downloads/9Debs/gcc-avr-binutilsavr-gdbavr-avrlibc
+   67  sudo cp /var/cache/apt/archives/* ~/Downloads/9Debs/gcc-avr-binutilsavr-gdbavr-avrlibc/
+   68  ls Downloads/9Debs/gcc-avr-binutilsavr-gdbavr-avrlibc/
+   69  sudo apt clean
+   70  ifconfig wlan0
+   71  sudo nano /etc/wpa_supplicant/wpa_supplicant.conf 
+   72  sudo reboot
+   73  sudo sudo poweroff
+   74  cd /home/pi/Documents/embedded/001_gpio_onoff
+   75  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   76  nano 001_seven_segs_onoff.c 
+   77  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   78  ls
+   79  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+   80  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+   81  nano 001_seven_segs_onoff.c 
+   82  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   83  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+   84  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+   85  nano 001_seven_segs_onoff.c 
+   86  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   87  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+   88  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+   89  nano 001_seven_segs_onoff.c 
+   90  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   91  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+   92  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+   93  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   94  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+   95  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+   96  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   97  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+   98  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+   99  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  100  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  101  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  102  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  103  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  104  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  105  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  106  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  107  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  108  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  109  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  110  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  111  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  112  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  113  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  114  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  115  avrdude -c usbasp -p atmega16 -U hfuse:w:<0xD9>:m
+  116  avrdude -c usbasp -p atmega16 -U hfuse:w:0xD9:m
+  117  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  118  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  119  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  120  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  121  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  122  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  123  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  124  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  125  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  126  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  127  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  128  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  129  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  130  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  131  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  132  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  133  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  134  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  135  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  136  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  137  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  138  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  139  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  140  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  141  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  142  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  143  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  144  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  145  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  146  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  147  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  148  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  149  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  150  DF -H
+  151  df -h
+  152  sudo sudo poweroff
+  153  cd Documents/embedded/001_gpio_onoff/
+  154  ls
+  155  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  156  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  157  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  158  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  159  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  160  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  161  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  162  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  163  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  164  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  165  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  166  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  167  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  168  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  169  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  170  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  171  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  172  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  173  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  174  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  175  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  176  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  177  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  178  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  179  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  180  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  181  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  182  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  183  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  184  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  185  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  186  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  187  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  188  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  189  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  190  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  191  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  192  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  193  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  194  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  195  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  196  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  197  ls & cat *
+  198  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  199  ls
+  200  rm main.bin main.hex 
+  201  ls
+  202  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  203  ls
+  204  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  205  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  206  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p atmega16a -c usbasp -U flash:w:main.hex:i -F -P usb
+  207  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  208  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p m161 -c usbasp -U flash:w:main.hex:i -F -P usb
+  209  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  210  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p m161 -c usbasp -U flash:w:main.hex:i -F -P usb
+  211  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  212  mkdir 001
+  213  cd 001/
+  214  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  215  cd ..
+  216  cd g
+  217  cd 001_gpio_onoff/
+  218  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  219  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  220  cd 001/
+  221  ls
+  222  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c 
+  223  ls
+  224  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  225  avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  226  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c 
+  227  ls
+  228  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c
+  229  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  230  avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  231  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  232  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  233  history > commands.txt
