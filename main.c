@@ -25,6 +25,7 @@
 
 int numArray[] = {0x40 ,  0x79 ,  0x24 ,  0x30 ,  0x19 ,  0x12 ,  0x02 ,  0x78 ,  0x00 ,  0x10 };
 int segArray[]={0x70,0xB0, 0xD0, 0xE0};
+int posSeg[4] = {0x40, 0x79, 0x24, 0x30}; 
 
 /*****************************************************************************
                               <  1                                40>   A        PA0
@@ -76,7 +77,7 @@ void seven_disp()
 */
 
    //0 to 9999
-
+/* 
     int i=0, j=0, k=0 ,l=0;
    while(1)
    {
@@ -119,8 +120,68 @@ void seven_disp()
               l++;
                          
    }
+*/
 
+//specific segments
+       for( int blank = 0; blank < 10; blank++)
+            {
+         
+                 PORTA = posSeg[0];
+                 PORTC = 0x80;
+                 
+                 _delay_ms (1);
+       
+                 PORTA = posSeg[1];
+                 PORTC = 0x40;
+
+                 _delay_ms (1);
+
+                 PORTA = posSeg[2];
+                 PORTC = 0x20;
+
+                 _delay_ms (1);
+                
+                 PORTA = posSeg[3]; 
+                 PORTC = 0x10;  
+      
+                 _delay_ms (1);
+              }
+}
+
+void parser(int a, int b, int c, int d)
+{
+   int nums[4];
+   nums[0] = a;
+   nums[1] = b;
+   nums[2] = c;
+   nums[3] = d;
    
+   for(int pos = 0; pos <4; pos++)
+   {
+      switch(nums[pos])
+      {
+         case 0:  posSeg[pos] = numArray[0];
+                  break;
+         case 1:  posSeg[pos] = numArray[1];
+                  break;                  
+         case 2:  posSeg[pos] = numArray[2];
+                  break;
+         case 3:  posSeg[pos] = numArray[3];
+                  break;
+         case 4:  posSeg[pos] = numArray[4];
+                  break;
+         case 5:  posSeg[pos] = numArray[5];
+                  break;                  
+         case 6:  posSeg[pos] = numArray[6];
+                  break;
+         case 7:  posSeg[pos] = numArray[7];
+                  break;                                    
+         case 8:  posSeg[pos] = numArray[8];
+                  break;
+         case 9:  posSeg[pos] = numArray[9];
+                  break;                  
+      }
+   }
 }
 
 int main()
@@ -128,7 +189,12 @@ int main()
    DDRA = 0xff;
    DDRC = 0xff;
    
-   seven_disp();
+   parser(3, 5, 6, 9);
+   
+   while(1)
+   {
+      seven_disp();
+   }
 
    return 0;
 }
