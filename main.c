@@ -3,6 +3,10 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <avr/interrupt.h>
+#include "rtc3231.h"
 
 
 //common anode
@@ -18,6 +22,9 @@
 //7   0     1     1     1   ||  1     0     0     0           =   78
 //8   0     0     0     0   ||  0     0     0     0           =   00
 //9   0     0     0     1   ||  0     0     0     0           =   10
+
+rtc_t today;
+rtc_t set_date;
 
 uint8_t numArrayDot[] = {0x40 ,  0x79 ,  0x24 ,  0x30 ,  0x19 ,  0x12 ,  0x02 ,  0x78 ,  0x00 ,  0x10 }; //with dots
 uint8_t numArray[] = {0xC0 ,  0xF9 ,  0xA4 ,  0xB0 ,  0x99 ,  0x92 ,  0x82 ,  0xF8 ,  0x80 ,  0x90 }; //with dots
