@@ -272,7 +272,11 @@ int main()
    
    PORTD = 0xFF;
    
-   parser(0, 5, 5, 9);
+   //parser(0, 5, 5, 9);
+   posSeg[0] = 0xCE;    //r
+   posSeg[1] = 0xA1;     //D
+   posSeg[2] = 0x91;     //y
+   posSeg[3] = 0xFF;     //no disp   
    
    while(1)
    {
