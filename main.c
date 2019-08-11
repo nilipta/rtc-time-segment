@@ -59,8 +59,17 @@ gnd                        <11                                30>             VC
 
 void setDate(uint8_t entered_Hr, uint8_t  entered_Min)
 {
-   char setHr = (char)entered_Hr;
-   char setMin = (char)entered_Min;
+   char setHr, setMin;
+   if(entered_Hr < 24 && entered_Min <60)
+   {
+      setHr = (char)entered_Hr;
+      setMin = (char)entered_Min;
+   }
+   else
+   {
+      setHr = 0;
+      setMin = 0;
+   }
    rtc_t rtc;
    rtc.hour = dec2bcd(setHr); //24 hour
    rtc.min =  dec2bcd(setMin); // minute
@@ -76,27 +85,23 @@ void seven_disp()
 {
        for( uint8_t blank = 0; blank < 2; blank++)
             {
-                 PORTC = 0x80;
+                 PORTC = ((PINC & 0x0F) | 0x80); //PORTC = 0x80;
                  PORTA = posSeg[0];
-                 PORTC = 0x80;
 
                  _delay_ms (1);
                  
-                 PORTC = 0x40;
+                 PORTC = ((PINC & 0x0F) | 0x40); //PORTC = 0x40;
                  PORTA = posSeg[1];
-                 PORTC = 0x40;
 
                  _delay_ms (1);
 
-                 PORTC = 0x20;
+                 PORTC = ((PINC & 0x0F) | 0x20); //PORTC = 0x20;
                  PORTA = posSeg[2];
-                 PORTC = 0x20;
                  
                  _delay_ms (1);
                 
-                 PORTC = 0x10;  
+                 PORTC = ((PINC & 0x0F) | 0x10);  //PORTC = 0x10;  
                  PORTA = posSeg[3]; 
-                 PORTC = 0x10;  
       
                  _delay_ms (1);
            }
@@ -106,19 +111,19 @@ void yes_disp()
 {
     for( uint8_t blank = 0; blank < 10; blank++)
          {
-            PORTC = 0x00;
+            PORTC = ((PINC & 0x0F) | 0x00);  //PORTC = 0x00;
             PORTA = 0xFF;     //no disp 
            _delay_ms (1);
            
-            PORTC = 0x40;
+            PORTC = ((PINC & 0x0F) | 0x40);  //PORTC = 0x40;
             PORTA = 0x91;     //Y 
            _delay_ms (1);
            
-            PORTC = 0x20;
+            PORTC = ((PINC & 0x0F) | 0x20);  //PORTC = 0x20;
             PORTA = 0x06;     //E 
            _delay_ms (1);
            
-            PORTC = 0x10;
+            PORTC = ((PINC & 0x0F) | 0x10);  //PORTC = 0x10;
             PORTA = 0x92;     //S 
            _delay_ms (1);
         }
@@ -303,7 +308,7 @@ uint8_t setTime()
 {
      uint8_t capturedNumbers[4] = {0, 0, 0, 0};
      uint8_t count = 0;
-     PORTC = 0xF0;      //all segs will be shown
+     //PORTC = 0xF0;      //all segs will be shown
      bool pressedFlag = false;
      while(1)
      {
@@ -327,15 +332,19 @@ uint8_t setTime()
          else if(count ==4 && temp == 10)    //pressed *
          {
             //do here put time to rtc
-            uint8_t makeHrFromInput = ((capturedNumbers[0] * 10) + capturedNumbers[1]);
-            uint8_t makeMinFromInput = ((capturedNumbers[2] * 10) + capturedNumbers[3]);
+            uint8_t makeHrFromInput = 25, makeMinFromInput = 61; //invalid hour and minute for condition
             while(1)
             {
                yes_disp();
                if(detect() == 11)
                {
-                     setDate(makeHrFromInput, makeMinFromInput);
-                     break;
+                  if(capturedNumbers[0] < 3 && capturedNumbers[1] < 4 && capturedNumbers[2] < 6 && capturedNumbers[3] < 10)
+                  {
+                     makeHrFromInput = ((capturedNumbers[0] * 10) + capturedNumbers[1]);
+                     makeMinFromInput = ((capturedNumbers[2] * 10) + capturedNumbers[3]);
+                  }
+                  setDate(makeHrFromInput, makeMinFromInput);
+                  break;
                }
             }
             break;
@@ -358,6 +367,13 @@ uint8_t setTime()
             parser(capturedNumbers[0], capturedNumbers[1], capturedNumbers[2], capturedNumbers[3]);
             seven_disp();
          }
+         else{
+            count = 0;
+            capturedNumbers[0] = 0;
+            capturedNumbers[1] = 0;
+            capturedNumbers[2] = 0;
+            capturedNumbers[3] = 0;
+         }
          
      }
      return 0;
@@ -371,6 +387,7 @@ int main()
    DDRD = 0x78;      //012  = input, 4567 = output for sw
    
    PORTD = 0xFF;
+   PORTC = 0xF0;
    
    //parser(0, 5, 5, 9);
    posSeg[0] = 0xCE;    //r
@@ -404,6 +421,21 @@ int main()
          _delay_ms (100);
       }
       seven_disp();
+      
+      //checking relay PC3 & PC4
+      if(Hour == 21)
+      {
+         if(Min >= 0 && Min < 5)
+            PORTC =   PINC & 0b11110111; //masking that pin 0(ON)
+         else
+         {
+            PORTC =   PINC | 0b00001000; //masking that pin 1(OFF)
+         }
+      }
+      else
+      {
+               PORTC =   PINC | 0b00001000; //masking that pin 1(OFF) //beacuse pin will be 1 at any cost others will remain same
+      }
    }
 
    return 0;
