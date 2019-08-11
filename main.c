@@ -26,6 +26,8 @@
 rtc_t today;
 rtc_t set_date;
 uint8_t Sec , Hour, Min;
+enum view {hourMin, minSec};
+bool currentView = 0;
 
 uint8_t numArrayDot[] = {0x40 ,  0x79 ,  0x24 ,  0x30 ,  0x19 ,  0x12 ,  0x02 ,  0x78 ,  0x00 ,  0x10 }; //with dots
 uint8_t numArray[] = {0xC0 ,  0xF9 ,  0xA4 ,  0xB0 ,  0x99 ,  0x92 ,  0x82 ,  0xF8 ,  0x80 ,  0x90 }; //with dots
@@ -359,7 +361,7 @@ int main()
       uint8_t indx0 =0, indx1 = 0, indx2 =0, indx3 = 0, indx4 =0, indx5 = 0;
      
       timeParser(&indx0, &indx1, &indx2, &indx3, &indx4, &indx5);
-      parser(indx2, indx3, indx4, indx5);
+      !currentView ? parser(indx2, indx3, indx4, indx5) : parser(indx0, indx1, indx2, indx3);
       
       
       uint8_t keyPress = detect();
@@ -367,6 +369,13 @@ int main()
       {
          //start switch presssed...so setting time
          setTime();
+      }
+      
+      if(keyPress == 11)
+      {
+         //start switch presssed...so setting time
+         currentView = currentView^1;
+         _delay_ms (100);
       }
       seven_disp();
    }
