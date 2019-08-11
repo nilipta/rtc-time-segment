@@ -1,1 +1,5 @@
-
+git status
+git add .
+git status
+git commit -m "changed view hr-min and min-sec"
+git push origin master

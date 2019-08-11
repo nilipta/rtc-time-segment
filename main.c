@@ -26,8 +26,8 @@
 rtc_t today;
 rtc_t set_date;
 uint8_t Sec , Hour, Min;
-enum view {hourMin, minSec};
-bool currentView = 0;
+//enum view {hourMin, minSec};
+bool currentView = 0;   //0 for hr-min, 1 for min-sec
 
 uint8_t numArrayDot[] = {0x40 ,  0x79 ,  0x24 ,  0x30 ,  0x19 ,  0x12 ,  0x02 ,  0x78 ,  0x00 ,  0x10 }; //with dots
 uint8_t numArray[] = {0xC0 ,  0xF9 ,  0xA4 ,  0xB0 ,  0x99 ,  0x92 ,  0x82 ,  0xF8 ,  0x80 ,  0x90 }; //with dots
@@ -72,28 +72,54 @@ void setDate()
 
 void seven_disp()
 {
-       for( uint8_t blank = 0; blank < 10; blank++)
+       for( uint8_t blank = 0; blank < 2; blank++)
             {
-                  PORTC = 0x80;
+                 PORTC = 0x80;
                  PORTA = posSeg[0];
-                 
+                 PORTC = 0x80;
+
                  _delay_ms (1);
-       
+                 
+                 PORTC = 0x40;
                  PORTA = posSeg[1];
                  PORTC = 0x40;
 
                  _delay_ms (1);
 
+                 PORTC = 0x20;
                  PORTA = posSeg[2];
                  PORTC = 0x20;
-
+                 
                  _delay_ms (1);
                 
+                 PORTC = 0x10;  
                  PORTA = posSeg[3]; 
                  PORTC = 0x10;  
       
                  _delay_ms (1);
            }
+}
+
+void yes_disp()
+{
+    for( uint8_t blank = 0; blank < 10; blank++)
+         {
+            PORTC = 0x00;
+            PORTA = 0xFF;     //no disp 
+           _delay_ms (1);
+           
+            PORTC = 0x40;
+            PORTA = 0x91;     //Y 
+           _delay_ms (1);
+           
+            PORTC = 0x20;
+            PORTA = 0x06;     //E 
+           _delay_ms (1);
+           
+            PORTC = 0x10;
+            PORTA = 0x92;     //S 
+           _delay_ms (1);
+        }
 }
 
 void parser(uint8_t a, uint8_t b, uint8_t c, uint8_t d)
@@ -223,7 +249,6 @@ uint8_t detect()
       _delay_ms (1);
       uint8_t val = PIND;
       
-      //PORTC = 0x80;
       uint8_t swVal = (val & 0x7F);
       if(swVal != 0x7F )
       {
@@ -300,18 +325,13 @@ uint8_t setTime()
          else if(count ==4 && temp == 10)    //pressed *
          {
             //do here put time to rtc
-            posSeg[0] = 0x91;    //y
-            posSeg[1] = 0x06;     //E
-            posSeg[2] = 0x92;     //S    
-            posSeg[3] = 0xFF;     //no disp   
             
             while(1)
             {
-               seven_disp();
+               yes_disp();
                if(detect() == 11)
                   break;
             }
-            parser(1, 2, 3, 4);
             break;
          }
          else
@@ -361,7 +381,7 @@ int main()
       uint8_t indx0 =0, indx1 = 0, indx2 =0, indx3 = 0, indx4 =0, indx5 = 0;
      
       timeParser(&indx0, &indx1, &indx2, &indx3, &indx4, &indx5);
-      !currentView ? parser(indx2, indx3, indx4, indx5) : parser(indx0, indx1, indx2, indx3);
+      currentView ? parser(indx2, indx3, indx4, indx5) : parser(indx0, indx1, indx2, indx3);
       
       
       uint8_t keyPress = detect();
