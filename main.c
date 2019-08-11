@@ -54,6 +54,19 @@ gnd                        <11                                30>             VC
                               <20                                21>               
 *****************************************************************************/
 
+void setDate()
+{
+   rtc_t rtc;
+   rtc.hour = dec2bcd(3); //24 hour
+   rtc.min =  dec2bcd(8); // minute
+   rtc.sec =  dec2bcd(10); //second
+   rtc.date = dec2bcd(24);   //28
+   rtc.month = dec2bcd(6);  //08
+   rtc.year = dec2bcd(19);  //2017
+   rtc.weekDay = 7;         // Friday: 5th day of week considering Monday as first day.
+   ds3231_SetDateTime(&rtc);
+}
+
 void seven_disp()
 {
        for( uint8_t blank = 0; blank < 10; blank++)
@@ -273,7 +286,7 @@ uint8_t setTime()
 int main()
 {
    unsigned int x = init_ds3231();
-   uint8_t sec ;
+   uint8_t sec , Hour, Min;
    DDRA = 0xff;
    DDRC = 0xff;
    DDRD = 0x78;      //012  = input, 4567 = output for sw
@@ -290,21 +303,55 @@ int main()
    {
       ds3231_GetDateTime(&today);
       sec = bcd2dec(today.sec);
-      uint8_t sec1 =0, sec2 =0;
+      Hour = bcd2dec(today.hour);
+      Min = bcd2dec(today.min);
+      uint8_t sec1 =0, sec2 =0, Hour1 = 0, Hour2 = 0, Min1 = 0, Min2 = 0, indx0 =0, indx1 = 0, indx2 =0, indx3 = 0, indx4 =0, indx5 = 0;;
       if(sec >= 10)
       {
             sec1 = sec / 10;
             sec2 = sec % 10;
-            parser(sec1, sec2, 9, 9);
+            indx4 = sec1; 
+            indx5 = sec2;
       }
       else
       {
             sec1 = 0;
             sec2 = sec ;
-            parser(sec1, 9, 9, 9);
+            indx4 = sec1; 
+            indx5 = sec2;
       }
       
+      if(Min >= 10)
+      {
+            Min1 = Min / 10;
+            Min2 = Min % 10;
+            indx2 = Min1; 
+            indx3 = Min2;
+      }
+      else
+      {
+            Min1 = 0;
+            Min2 = Min ;
+            indx2 = Min1; 
+            indx3 = Min2;
+      }
       
+      if(Hour >= 10)
+      {
+            Hour1 = Hour / 10;
+            Hour2 = Hour % 10;
+            indx0 = Hour1; 
+            indx1 = Hour2;
+      }
+      else
+      {
+            Hour1 = 0;
+            Hour2 = Hour ;
+            indx0 = Hour1; 
+            indx1 = Hour2;
+      }
+      
+      parser(indx2, indx3, indx4, indx5);
       uint8_t keyPress = detect();
       if(keyPress == 10)
       {
