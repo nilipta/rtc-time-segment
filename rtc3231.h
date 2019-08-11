@@ -5,12 +5,12 @@
  *  Author: prouser
  */ 
 
-
+#define F_CPU 4000000UL 
 #ifndef INCFILE1_H_
 #define INCFILE1_H_
 
-#include <avr\io.h>
-#include <util\delay.h>
+#include <avr/io.h>
+#include <util/delay.h>
 
 typedef struct
 {
@@ -40,7 +40,7 @@ typedef struct
 #define DS3231_REG_TEMPERATURE      (0x11)
 
 
-void    init_ds3231(void);
+unsigned int     init_ds3231(void);
 void    ds3231_SetDateTime(rtc_t *rtc);
 void    ds3231_GetDateTime(rtc_t *rtc);
 int8_t  rtc_get_temp();

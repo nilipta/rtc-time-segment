@@ -9,14 +9,18 @@
 #include "I2C.h"
 
 
-void init_ds3231(void)
+unsigned int init_ds3231(void)
 {
-    I2C_init(10000);                             // Initialize the I2c module.
+    //I2C_init(10000);                             // Initialize the I2c module.
+    //specificcally for internal oscillator 1mHZ
+    unsigned int baudR = ((F_CPU / 100000) - 16) /2;
+    I2C_init(baudR);
     I2C_start();                            // Start I2C communication
     I2C_transmit(DS3231_WriteMode_U8);          // Connect to ds3231 
     I2C_transmit(DS3231_REG_CONTROL);          // Select the ds3231 ControlRegister 
     I2C_transmit(0x00);                        // Write 0x00 to Control register to disable SQW-Out
-    I2C_stop();                             // Stop I2C communication after initializing ds3231
+    I2C_stop();                             // Stop I2C communication after initializing ds3231*/
+    return baudR;
 }
 
 /***************************************************************************************************
@@ -61,7 +65,7 @@ void ds3231_GetDateTime(rtc_t *rtc)
     rtc->month=I2C_receive_ACK();            // read Month and return Positive ACK
     rtc->year =I2C_receive_NACK();             // read Year and return Negative/No ACK
 
-    I2C_stop();                              // Stop I2C communication after reading the Date
+    I2C_stop();                              // Stop I2C communication after reading the Date 
 }
 
 /*float rtc_get_temp()

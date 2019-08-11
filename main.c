@@ -1,4 +1,4 @@
-#define F_CPU 1000000UL 
+#define F_CPU 4000000UL 
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -58,9 +58,8 @@ void seven_disp()
 {
        for( uint8_t blank = 0; blank < 10; blank++)
             {
-         
+                  PORTC = 0x80;
                  PORTA = posSeg[0];
-                 PORTC = 0x80;
                  
                  _delay_ms (1);
        
@@ -273,6 +272,8 @@ uint8_t setTime()
 
 int main()
 {
+   unsigned int x = init_ds3231();
+   uint8_t sec ;
    DDRA = 0xff;
    DDRC = 0xff;
    DDRD = 0x78;      //012  = input, 4567 = output for sw
@@ -287,6 +288,22 @@ int main()
    
    while(1)
    {
+      ds3231_GetDateTime(&today);
+      sec = bcd2dec(today.sec);
+      uint8_t sec1 =0, sec2 =0;
+      if(sec >= 10)
+      {
+            sec1 = sec / 10;
+            sec2 = sec % 10;
+            parser(sec1, sec2, 9, 9);
+      }
+      else
+      {
+            sec1 = 0;
+            sec2 = sec ;
+            parser(sec1, 9, 9, 9);
+      }
+      
       
       uint8_t keyPress = detect();
       if(keyPress == 10)
@@ -299,7 +316,6 @@ int main()
 
    return 0;
 }
-
 
 
 

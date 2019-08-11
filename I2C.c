@@ -10,12 +10,15 @@
 
 void I2C_init(unsigned int baud){
 	TWBR = baud;
+	//TWCR = (1<<TWEN); // Enable TWI 
 }
 
 void I2C_start(void)
 {
-	TWCR = (1<<TWINT) | (1<<TWSTA) | (1<<TWEN);
-	while (!(TWCR & (1<<TWINT)));  // ?? ?? ??
+	/*TWCR = (1<<TWINT) | (1<<TWSTA) | (1<<TWEN);
+	while (!(TWCR & (1<<TWINT)));  // ?? ?? ??  */
+	TWCR = (1<<TWINT)|(1<<TWSTA)|(1<<TWEN);
+    while (!(TWCR & (1<<TWINT)));
 }
 
 void I2C_transmit(uint8_t data)
