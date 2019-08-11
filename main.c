@@ -25,6 +25,7 @@
 
 rtc_t today;
 rtc_t set_date;
+uint8_t Sec , Hour, Min;
 
 uint8_t numArrayDot[] = {0x40 ,  0x79 ,  0x24 ,  0x30 ,  0x19 ,  0x12 ,  0x02 ,  0x78 ,  0x00 ,  0x10 }; //with dots
 uint8_t numArray[] = {0xC0 ,  0xF9 ,  0xA4 ,  0xB0 ,  0x99 ,  0x92 ,  0x82 ,  0xF8 ,  0x80 ,  0x90 }; //with dots
@@ -160,6 +161,57 @@ void parser(uint8_t a, uint8_t b, uint8_t c, uint8_t d)
    }
 }
 
+
+void timeParser(uint8_t *a, uint8_t *b, uint8_t *c, uint8_t *d, uint8_t *e, uint8_t *f)
+{
+   uint8_t Sec1 =0, Sec2 =0, Hour1 = 0, Hour2 = 0, Min1 = 0, Min2 = 0;
+    if(Sec >= 10)
+      {
+            Sec1 = Sec / 10;
+            Sec2 = Sec % 10;
+            *e = Sec1; 
+            *f = Sec2;
+      }
+      else
+      {
+            Sec1 = 0;
+            Sec2 = Sec ;
+            *e = Sec1; 
+            *f = Sec2;
+      }
+      
+      if(Min >= 10)
+      {
+            Min1 = Min / 10;
+            Min2 = Min % 10;
+            *c = Min1; 
+            *d = Min2;
+      }
+      else
+      {
+            Min1 = 0;
+            Min2 = Min ;
+            *c = Min1; 
+            *d = Min2;
+      }
+      
+      if(Hour >= 10)
+      {
+            Hour1 = Hour / 10;
+            Hour2 = Hour % 10;
+            *a = Hour1; 
+            *b = Hour2;
+      }
+      else
+      {
+            Hour1 = 0;
+            Hour2 = Hour ;
+            *a = Hour1; 
+            *b = Hour2;
+      }
+}
+
+
 uint8_t detect()
 {
    uint8_t scan[] = {0x3F, 0x5F, 0x6F, 0x77 };   //011 1111 , 101 1111, 110 1111, 111 0..
@@ -286,7 +338,6 @@ uint8_t setTime()
 int main()
 {
    unsigned int x = init_ds3231();
-   uint8_t sec , Hour, Min;
    DDRA = 0xff;
    DDRC = 0xff;
    DDRD = 0x78;      //012  = input, 4567 = output for sw
@@ -302,56 +353,15 @@ int main()
    while(1)
    {
       ds3231_GetDateTime(&today);
-      sec = bcd2dec(today.sec);
+      Sec = bcd2dec(today.sec);
       Hour = bcd2dec(today.hour);
       Min = bcd2dec(today.min);
-      uint8_t sec1 =0, sec2 =0, Hour1 = 0, Hour2 = 0, Min1 = 0, Min2 = 0, indx0 =0, indx1 = 0, indx2 =0, indx3 = 0, indx4 =0, indx5 = 0;;
-      if(sec >= 10)
-      {
-            sec1 = sec / 10;
-            sec2 = sec % 10;
-            indx4 = sec1; 
-            indx5 = sec2;
-      }
-      else
-      {
-            sec1 = 0;
-            sec2 = sec ;
-            indx4 = sec1; 
-            indx5 = sec2;
-      }
-      
-      if(Min >= 10)
-      {
-            Min1 = Min / 10;
-            Min2 = Min % 10;
-            indx2 = Min1; 
-            indx3 = Min2;
-      }
-      else
-      {
-            Min1 = 0;
-            Min2 = Min ;
-            indx2 = Min1; 
-            indx3 = Min2;
-      }
-      
-      if(Hour >= 10)
-      {
-            Hour1 = Hour / 10;
-            Hour2 = Hour % 10;
-            indx0 = Hour1; 
-            indx1 = Hour2;
-      }
-      else
-      {
-            Hour1 = 0;
-            Hour2 = Hour ;
-            indx0 = Hour1; 
-            indx1 = Hour2;
-      }
-      
+      uint8_t indx0 =0, indx1 = 0, indx2 =0, indx3 = 0, indx4 =0, indx5 = 0;
+     
+      timeParser(&indx0, &indx1, &indx2, &indx3, &indx4, &indx5);
       parser(indx2, indx3, indx4, indx5);
+      
+      
       uint8_t keyPress = detect();
       if(keyPress == 10)
       {
