@@ -57,11 +57,13 @@ gnd                        <11                                30>             VC
                               <20                                21>               
 *****************************************************************************/
 
-void setDate()
+void setDate(uint8_t entered_Hr, uint8_t  entered_Min)
 {
+   char setHr = (char)entered_Hr;
+   char setMin = (char)entered_Min;
    rtc_t rtc;
-   rtc.hour = dec2bcd(14); //24 hour
-   rtc.min =  dec2bcd(16); // minute
+   rtc.hour = dec2bcd(setHr); //24 hour
+   rtc.min =  dec2bcd(setMin); // minute
    rtc.sec =  dec2bcd(10); //second
    rtc.date = dec2bcd(11);   //28
    rtc.month = dec2bcd(8);  //08
@@ -325,13 +327,14 @@ uint8_t setTime()
          else if(count ==4 && temp == 10)    //pressed *
          {
             //do here put time to rtc
-            
+            uint8_t makeHrFromInput = ((capturedNumbers[0] * 10) + capturedNumbers[1]);
+            uint8_t makeMinFromInput = ((capturedNumbers[2] * 10) + capturedNumbers[3]);
             while(1)
             {
                yes_disp();
                if(detect() == 11)
                {
-                     setDate();
+                     setDate(makeHrFromInput, makeMinFromInput);
                      break;
                }
             }
@@ -350,7 +353,7 @@ uint8_t setTime()
             }
          _delay_ms (10);
          //-----------------------------------------
-         if(capturedNumbers[0]<3 && capturedNumbers[1] < 5 && capturedNumbers[2]< 6 && capturedNumbers[3] < 10)
+         if(capturedNumbers[0] < 3 && capturedNumbers[1] < 4 && capturedNumbers[2] < 6 && capturedNumbers[3] < 10)
          {
             parser(capturedNumbers[0], capturedNumbers[1], capturedNumbers[2], capturedNumbers[3]);
             seven_disp();
