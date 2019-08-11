@@ -60,11 +60,11 @@ gnd                        <11                                30>             VC
 void setDate()
 {
    rtc_t rtc;
-   rtc.hour = dec2bcd(3); //24 hour
-   rtc.min =  dec2bcd(8); // minute
+   rtc.hour = dec2bcd(14); //24 hour
+   rtc.min =  dec2bcd(16); // minute
    rtc.sec =  dec2bcd(10); //second
-   rtc.date = dec2bcd(24);   //28
-   rtc.month = dec2bcd(6);  //08
+   rtc.date = dec2bcd(11);   //28
+   rtc.month = dec2bcd(8);  //08
    rtc.year = dec2bcd(19);  //2017
    rtc.weekDay = 7;         // Friday: 5th day of week considering Monday as first day.
    ds3231_SetDateTime(&rtc);
@@ -330,7 +330,10 @@ uint8_t setTime()
             {
                yes_disp();
                if(detect() == 11)
-                  break;
+               {
+                     setDate();
+                     break;
+               }
             }
             break;
          }
