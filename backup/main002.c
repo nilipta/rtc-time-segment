@@ -29,7 +29,6 @@ uint8_t Sec , Hour, Min;
 //enum view {hourMin, minSec};
 bool currentView = 0;   //0 for hr-min, 1 for min-sec
 
-bool globalDisplayFlag = false;
 uint8_t numArrayDot[] = {0x40 ,  0x79 ,  0x24 ,  0x30 ,  0x19 ,  0x12 ,  0x02 ,  0x78 ,  0x00 ,  0x10 }; //with dots
 uint8_t numArray[] = {0xC0 ,  0xF9 ,  0xA4 ,  0xB0 ,  0x99 ,  0x92 ,  0x82 ,  0xF8 ,  0x80 ,  0x90 }; //with dots
 uint8_t segArray[]={0x70,0xB0, 0xD0, 0xE0};  //
@@ -380,62 +379,6 @@ uint8_t setTime()
      return 0;
 }
 
-bool setDisplayOn() //initial display will be off (1*2 combination will make disp on)
-{
-   bool checkStep1 = false , checkStep2 = false;
-   parser(9, 0, 0, 1);
-  while(1) //check *
-  {
-      //detecting button press for numbers
-      uint8_t temp =  detect();
-      if(temp == 10)     //pressed *
-      {
-         checkStep1 = true;
-         break;
-      }
-      else if(temp == 11)     //pressed *
-      {
-         break;
-      }
-      else 
-      {
-         
-      }
-      seven_disp();
-   }//while1
-   parser(9, 0, 0, 2);
-   while(1) //check 1
-     {
-         //detecting button press for numbers
-         uint8_t temp =  detect();
-         if(temp == 2)      //pressed 2
-         {
-            checkStep2 = true;
-            break;
-         }
-         else if(temp == 11)     //pressed *
-         {
-            break;
-         }
-         else 
-         {
-            
-         }
-         seven_disp();
-      }
-   if(checkStep1 && checkStep2)
-   {
-      globalDisplayFlag = true;
-   }
-   else
-   {
-      globalDisplayFlag = false;
-   }
-
-   return false;
-}
-
-
 int main()
 {
    DDRA = 0xff;
@@ -471,29 +414,14 @@ int main()
          //start switch presssed...so setting time
          setTime();
       }
-      else if(keyPress == 11)
+      
+      if(keyPress == 11)
       {
          //start switch presssed...so setting time
          currentView = currentView^1;
          _delay_ms (100);
       }
-      else if(keyPress == 1)
-      {
-         //decide if seven segment should be on or off
-         setDisplayOn();
-      }
-      else
-      {} 
-      //end of keystrokes logic------------
-      
-      if(globalDisplayFlag)
-      {
-         seven_disp();
-      }
-      else
-      {
-         PORTC = PINC & 0b00001111;
-      }
+      seven_disp();
       
       //checking relay PC3 & PC4
       if(Hour == 21)
@@ -507,7 +435,7 @@ int main()
       }
       else
       {
-         PORTC =   PINC | 0b00001000; //masking that pin 1(OFF) //beacuse pin will be 1 at any cost others will remain same
+               PORTC =   PINC | 0b00001000; //masking that pin 1(OFF) //beacuse pin will be 1 at any cost others will remain same
       }
    }
 

@@ -1,0 +1,1 @@
+avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb 
