@@ -47,7 +47,6 @@ uint8_t numArray[] = {0xC0 ,  0xF9 ,  0xA4 ,  0xB0 ,  0x99 ,  0x92 ,  0x82 ,  0x
 uint8_t segArray[]={0x70,0xB0, 0xD0, 0xE0};  //
 uint8_t posSeg[4] = {0x40, 0x79, 0x24, 0x30}; //0123 display
 
-#define dash 0xBF
 //EEPROM section
 uint8_t op1onHrAddr[] = {10, 11, 12, 13, 14, 15};    //
 uint8_t op1onMinAddr[] = {16, 17, 18, 19, 20, 21};   //
@@ -67,11 +66,6 @@ uint8_t op2onHr[] = {24, 24, 24, 24, 24, 24};   //34 35 36 37 38 39
 uint8_t op2onMin[] = {60, 60, 60, 60, 60, 60};  //40 41 42 43 44 45 
 uint8_t op2offHr[] = {24, 24, 24, 24, 24, 24};  //46 47 48 49 50 51
 uint8_t op2offMin[] = {60, 60, 60, 60, 60, 60}; //52 53 54 55 56 57
-
-uint8_t op1ActualOn[6];
-uint8_t op1ActualOff[6];
-uint8_t op2ActualOn[6];
-uint8_t op2ActualOff[6];
 
 /*****************************************************************************
                               < 1                                40>   A        PA0
@@ -168,7 +162,7 @@ void yes_disp()
         }
 }
 
-void parser(uint8_t a, uint8_t b, uint8_t c, uint8_t d, bool dot0, bool dot1, bool dot2, bool dot3)
+void parser(uint8_t a, uint8_t b, uint8_t c, uint8_t d)
 {
    uint8_t nums[4];
    nums[0] = a;
@@ -178,7 +172,74 @@ void parser(uint8_t a, uint8_t b, uint8_t c, uint8_t d, bool dot0, bool dot1, bo
    
    for(uint8_t pos = 0; pos <4; pos++)
    {
-      if( ((pos==0) && dot0) || ((pos==1) && dot1) || ((pos==2) && dot2) || ((pos==3) && dot3) )
+      if(pos==1)
+      {
+         switch(nums[pos])
+         {
+            case 0:  posSeg[pos] = numArrayDot[0];
+                     break;
+            case 1:  posSeg[pos] = numArrayDot[1];
+                     break;                  
+            case 2:  posSeg[pos] = numArrayDot[2];
+                     break;
+            case 3:  posSeg[pos] = numArrayDot[3];
+                     break;
+            case 4:  posSeg[pos] = numArrayDot[4];
+                     break;
+            case 5:  posSeg[pos] = numArrayDot[5];
+                     break;                  
+            case 6:  posSeg[pos] = numArrayDot[6];
+                     break;
+            case 7:  posSeg[pos] = numArrayDot[7];
+                     break;                                    
+            case 8:  posSeg[pos] = numArrayDot[8];
+                     break;
+            case 9:  posSeg[pos] = numArrayDot[9];
+                     break;                  
+         }
+      }
+      
+      else
+      {
+         switch(nums[pos])
+         {
+            case 0:  posSeg[pos] = numArray[0];
+                     break;
+            case 1:  posSeg[pos] = numArray[1];
+                     break;                  
+            case 2:  posSeg[pos] = numArray[2];
+                     break;
+            case 3:  posSeg[pos] = numArray[3];
+                     break;
+            case 4:  posSeg[pos] = numArray[4];
+                     break;
+            case 5:  posSeg[pos] = numArray[5];
+                     break;                  
+            case 6:  posSeg[pos] = numArray[6];
+                     break;
+            case 7:  posSeg[pos] = numArray[7];
+                     break;                                    
+            case 8:  posSeg[pos] = numArray[8];
+                     break;
+            case 9:  posSeg[pos] = numArray[9];
+                     break;                  
+         }
+      }
+      
+   }
+}
+
+void showOnParser(uint8_t a, uint8_t b, uint8_t c, uint8_t d) //special made show on parser will display . at 2nd place and . at end
+{
+   uint8_t nums[4];
+   nums[0] = a;
+   nums[1] = b;
+   nums[2] = c;
+   nums[3] = d;
+   
+   for(uint8_t pos = 0; pos <4; pos++)
+   {
+      if(pos==1 || pos==3)
       {
          switch(nums[pos])
          {
@@ -378,19 +439,6 @@ uint8_t detect()
 }
 
 
-void detectDebounce()
-{
-   uint8_t temp;
-   while(1) //check *
-   {
-      //detecting button press for numbers
-      temp =  detect();
-      temp = temp & 0x07;
-      if (temp == 0x07)
-         break;
-   } 
-}
-
 bool detectEnterExit()
 {
    uint8_t temp;
@@ -398,7 +446,6 @@ bool detectEnterExit()
    {
       //detecting button press for numbers
       temp =  detect();
-
       if(temp == 10)     //pressed *
       {
          return true;
@@ -412,11 +459,23 @@ bool detectEnterExit()
          
       }
       seven_disp();
-     // detectDebounce();
    }
 }
 
-uint8_t setEntry(uint8_t *cap1, uint8_t *cap2, uint8_t *cap3, uint8_t *cap4)
+void detectDebounce()
+{
+   uint8_t temp;
+   while(1) //check *
+   {
+      //detecting button press for numbers
+      temp =  detect();
+      temp = temp & 0x07;
+      if (temp == 0x07)
+         break;
+   } 
+}
+
+uint8_t setTime()
 {
      uint8_t capturedNumbers[4] = {0, 0, 0, 0};
      uint8_t count = 0;
@@ -443,14 +502,19 @@ uint8_t setEntry(uint8_t *cap1, uint8_t *cap2, uint8_t *cap3, uint8_t *cap4)
          }
          else if(count ==4 && temp == 10)    //pressed *
          {
+            //do here put time to rtc
+            uint8_t makeHrFromInput = 25, makeMinFromInput = 61; //invalid hour and minute for condition
             while(1)
-            {//4 entries provided......so exiting the loop
+            {
+               yes_disp();
                if(detect() == 11)
                {
-                  *cap1 = capturedNumbers[0];
-                  *cap2 = capturedNumbers[1];
-                  *cap3 = capturedNumbers[2];
-                  *cap4 = capturedNumbers[3];
+                  if( ( /**/(capturedNumbers[0] < 3 && capturedNumbers[1] < 4) || (capturedNumbers[0] < 2 && capturedNumbers[1] < 10) /**/ ) && capturedNumbers[2] < 6 && capturedNumbers[3] < 10)
+                  {
+                     makeHrFromInput = ((capturedNumbers[0] * 10) + capturedNumbers[1]);
+                     makeMinFromInput = ((capturedNumbers[2] * 10) + capturedNumbers[3]);
+                  }
+                  setDate(makeHrFromInput, makeMinFromInput);
                   break;
                }
             }
@@ -468,52 +532,28 @@ uint8_t setEntry(uint8_t *cap1, uint8_t *cap2, uint8_t *cap3, uint8_t *cap4)
                capturedNumbers[3] = 0;                                             
             }
          _delay_ms (10);
-         //-----------------------------------------dont display the entered num if ot of range-------------------
-         //if( ( /**/(capturedNumbers[0] < 3 && capturedNumbers[1] < 4) || (capturedNumbers[0] < 2 && capturedNumbers[1] < 10) /**/ ) && capturedNumbers[2] < 6 && capturedNumbers[3] < 10)
+         //-----------------------------------------
+         if( ( /**/(capturedNumbers[0] < 3 && capturedNumbers[1] < 4) || (capturedNumbers[0] < 2 && capturedNumbers[1] < 10) /**/ ) && capturedNumbers[2] < 6 && capturedNumbers[3] < 10)
          {
-            parser(capturedNumbers[0], capturedNumbers[1], capturedNumbers[2], capturedNumbers[3], 0, 1, 0, 0);
+            parser(capturedNumbers[0], capturedNumbers[1], capturedNumbers[2], capturedNumbers[3]);
             seven_disp();
          }
-         /*else{
+         else{
             count = 0;
             capturedNumbers[0] = 0;
             capturedNumbers[1] = 0;
             capturedNumbers[2] = 0;
             capturedNumbers[3] = 0;
-         }*/
+         }
          
      }
      return 0;
 }
 
-
-void  setTime()
-{
-   uint8_t cap1,  cap2,  cap3,  cap4; //captured from user
-   setEntry(&cap1,  &cap2,  &cap3,  &cap4);
-      //do here put time to rtc
-   uint8_t makeHrFromInput = 25, makeMinFromInput = 61; //invalid hour and minute for condition
-   if( ( /**/(cap1 < 3 && cap2 < 4) || (cap1 < 2 && cap2 < 10) /**/ ) && cap3 < 6 && cap4 < 10)
-   {
-      while(1)
-            {
-               yes_disp();
-               if(detect() == 11)
-               {
-                  break;
-               }
-               seven_disp();
-            }
-      makeHrFromInput = ((cap1 * 10) + cap2);
-      makeMinFromInput = ((cap3 * 10) + cap4);
-      setDate(makeHrFromInput, makeMinFromInput);
-   }
-}
-
 bool setDisplayOn() //initial display will be off (1*2 combination will make disp on)
 {
-   bool checkStep1 = false;
-   parser(9, 0, 0, 1, 0, 0, 0, 0);
+   bool checkStep1 = false , checkStep2 = false;
+   parser(9, 0, 0, 1);
   while(1) //check *
   {
       //detecting button press for numbers
@@ -533,8 +573,27 @@ bool setDisplayOn() //initial display will be off (1*2 combination will make dis
       }
       seven_disp();
    }//while1
-
-   if(checkStep1)
+   parser(9, 0, 0, 2);
+   while(1) //check 1
+     {
+         //detecting button press for numbers
+         uint8_t temp =  detect();
+         if(temp == 2)      //pressed 2
+         {
+            checkStep2 = true;
+            break;
+         }
+         else if(temp == 11)     //pressed *
+         {
+            break;
+         }
+         else 
+         {
+            
+         }
+         seven_disp();
+      }
+   if(checkStep1 && checkStep2)
    {
       globalDisplayFlag = true;
    }
@@ -594,127 +653,10 @@ void readOpSlot(uint8_t output, uint8_t slotNo, uint8_t *onHr, uint8_t *onMin, u
    }
 }
 
-void eepromSetManualTime(uint8_t output, uint8_t slotNo)
-{
-   uint8_t cap1,  cap2,  cap3,  cap4; //captured from user for ONTime (When to ON HHMM)
-   uint8_t cap5,  cap6,  cap7,  cap8; //captured from user for OFFTime (When to OFF HHMM)
-   
-   hexParser(0x86, dash, 0xC0, 0xAB);   //enter ON E-ON
-   while(1)
-   {
-      seven_disp();
-      if(detect() == 10)
-         break;
-   }
-   
-   setEntry(&cap1,  &cap2,  &cap3,  &cap4);
-   
-   hexParser(0x86, dash, 0xC0, 0x8E);   //enter ON E-ON
-   while(1)
-   {
-      seven_disp();
-      if(detect() == 10)
-         break;
-   }
-   setEntry(&cap5,  &cap6,  &cap7,  &cap8);
-   
-      //do here put time to rtc
-   uint8_t makeHrOnFromInput = 25, makeMinOnFromInput = 61, makeHrOffFromInput = 25, makeMinOffFromInput = 61; //invalid hour and minute for condition
-   if( ( /*ON COND*/((cap1 < 3 && cap2 < 4) || (cap1 < 2 && cap2 < 10) /**/ ) && cap3 < 6 && cap4 < 10 ) && (/*OFF COND*/((cap5 < 3 && cap6 < 4) || (cap5 < 2 && cap6 < 10) /**/ ) && cap7 < 6 && cap8 < 10) )
-   {
-      while(1)
-            {
-               yes_disp();
-               if(detect() == 11)
-               {
-                  break;
-               }
-               seven_disp();
-            }
-      makeHrOnFromInput = ((cap1 * 10) + cap2); //user input is raw..so converting to actual decimal
-      makeMinOnFromInput = ((cap3 * 10) + cap4);
-      makeHrOffFromInput = ((cap5 * 10) + cap6);
-      makeMinOffFromInput = ((cap7 * 10) + cap8);
-      
-      if(output == 1)
-      {
-         op1onHr[slotNo] = makeHrOnFromInput;
-         op1onMin[slotNo] = makeMinOnFromInput;
-         op1offHr[slotNo] = makeHrOffFromInput;
-         op1offMin[slotNo] = makeMinOffFromInput;
-      }
-      else if (output == 2)
-      {
-         op2onHr[slotNo] = makeHrOnFromInput;
-         op2onMin[slotNo] = makeMinOnFromInput;
-         op2offHr[slotNo] = makeHrOffFromInput;
-         op2offMin[slotNo] = makeMinOffFromInput;
-      }
-   }
-}
-
-void eepromDisplayNclear(uint8_t output, uint8_t slotNo, uint8_t onHr, uint8_t onMin, uint8_t offHr, uint8_t offMin)
-{
-   uint8_t seg1, seg2, seg3, seg4 , temp;
-   bool showOnOff = true;
-   while(1)
-   {
-      //it will send 4 segments alue of on time and off time
-      if(showOnOff)
-         {
-            timeToDigitParser(onHr, onMin, &seg1, &seg2, &seg3, &seg4);
-            parser(seg1, seg2, seg3, seg4, 0, 1, 0, 1);  //special made show on parser will display . at end
-         }
-      else
-         {
-            timeToDigitParser(offHr, offMin, &seg1, &seg2, &seg3, &seg4);
-            parser(seg1, seg2, seg3, seg4, 0, 1, 0, 0);
-         }
-
-      temp =  detect();
-
-      //if * is pressed swap on time display or off time display
-      if(temp == 10)     //pressed *
-      {
-         showOnOff = showOnOff ^ 1;
-      }
-      else if(temp == 11)     //pressed *
-      {
-         break;
-      }
-      else if(temp == 0)     //pressed 0 for clearing time entry to 88(invalid)
-      {
-         //---to do display clear dialog
-         if(output == 1)
-         {
-            op1onHr[slotNo] = 88;
-            op1onMin[slotNo] = 88;
-            op1offHr[slotNo] = 88;
-            op1offMin[slotNo] = 88;
-         }
-         else if (output == 2)
-         {
-            op2onHr[slotNo] = 88;
-            op2onMin[slotNo] = 88;
-            op2offHr[slotNo] = 88;
-            op2offMin[slotNo] = 88;
-         }
-         break;
-      }
-      else if(temp == 9)     //pressed 9 to entry some input
-      {
-         eepromSetManualTime(output, slotNo);
-         break;
-      }
-         
-      seven_disp();
-   }
-}
-
 void eepromInit()
 {
    bool checkStep1 = false;
-   parser(9, 1, 0, 1, 0, 0, 0, 0);
+   parser(9, 1, 0, 1);
    uint8_t temp, outputSelect = 0;
    while(1) //check *
    {
@@ -736,7 +678,7 @@ void eepromInit()
       seven_disp();
    }
    
-      parser(9, 1, 0, 2, 0, 0, 0, 0);
+      parser(9, 1, 0, 2);
    if(checkStep1)
    {
 
@@ -775,7 +717,7 @@ void eepromInit()
          
       while(1)
       {
-         if(detectEnterExit())
+         if(!detectEnterExit())
             break;
          seven_disp();
       }
@@ -783,54 +725,50 @@ void eepromInit()
       while(1) //display every entries as per the input
       {
          temp =  detect();
-         PORTA = dash;  //----
          uint8_t onHr, onMin, offHr, offMin;
-         //uint8_t seg1, seg2, seg3, seg4;
+         uint8_t seg1, seg2, seg3, seg4;
          switch(temp)
          {
             case 1:  //show 1st on & off  - hr.min
                {
                   readOpSlot(outputSelect, 1, &onHr, &onMin, &offHr, &offMin);
-                  eepromDisplayNclear(outputSelect, 1, onHr, onMin, offHr, offMin);
+                  bool showOnOff = true;
+                  while(1)
+                  {
+                     //it will send 4 segments alue of on time and off time
+                     if(showOnOff)
+                        {
+                           timeToDigitParser(onHr, onMin, &seg1, &seg2, &seg3, &seg4);
+                           showOnParser(seg1, seg2, seg3, seg4);  //special made show on parser will display . at end
+                        }
+                     else
+                        {
+                           timeToDigitParser(offHr, offMin, &seg1, &seg2, &seg3, &seg4);
+                           parser(seg1, seg2, seg3, seg4);
+                        }
+                     //if * is pressed swap on time display or off time display
+                     if(detectEnterExit())
+                        showOnOff = showOnOff ^ 1;
+                     else
+                        break;
+                        
+                     seven_disp();
+                  }
                }
                break;
             case 2:
-               {
-                  readOpSlot(outputSelect, 2, &onHr, &onMin, &offHr, &offMin);
-                  eepromDisplayNclear(outputSelect, 2, onHr, onMin, offHr, offMin);
-               }
                break;
             case 3:
-               {
-                  readOpSlot(outputSelect, 3, &onHr, &onMin, &offHr, &offMin);
-                  eepromDisplayNclear(outputSelect, 3, onHr, onMin, offHr, offMin);
-               }
                break;
             case 4:
-               {
-                  readOpSlot(outputSelect, 4, &onHr, &onMin, &offHr, &offMin);
-                  eepromDisplayNclear(outputSelect, 4, onHr, onMin, offHr, offMin);
-               }
                break;
             case 5:
-               {
-                  readOpSlot(outputSelect, 5, &onHr, &onMin, &offHr, &offMin);
-                  eepromDisplayNclear(outputSelect, 5, onHr, onMin, offHr, offMin);
-               }
                break;
             case 6:
-               {
-                  readOpSlot(outputSelect, 6, &onHr, &onMin, &offHr, &offMin);
-                  eepromDisplayNclear(outputSelect, 6, onHr, onMin, offHr, offMin);
-               }
                break;
-            case 11:
-               break;
-         }//switch
-         if(temp == 0)
-            break;
-      }//while on off shw time
-   }//end output cond
+         }
+      }
+   }
 }
 
 
@@ -842,7 +780,7 @@ int main()
    
    PORTD = 0xFF;
    PORTC = 0xF0;
-   PORTA = 0xBF;  //----
+   PORTA = 0xBF;
    init_ds3231();
    
    //parser(0, 5, 5, 9);
@@ -860,7 +798,7 @@ int main()
       uint8_t indx0 =0, indx1 = 0, indx2 =0, indx3 = 0, indx4 =0, indx5 = 0;
      
       timeParser(&indx0, &indx1, &indx2, &indx3, &indx4, &indx5);
-      currentView ? parser(indx2, indx3, indx4, indx5, 0, 1, 0, 0) : parser(indx0, indx1, indx2, indx3, 0, 1, 0, 0);
+      currentView ? parser(indx2, indx3, indx4, indx5) : parser(indx0, indx1, indx2, indx3);
       
       
       uint8_t keyPress = detect();
