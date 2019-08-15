@@ -6,10 +6,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <avr/interrupt.h>
-#include <avr/eeprom.h>  /* Include AVR EEPROM header file */
+/*#include <avr/eeprom.h>   Include AVR EEPROM header file */
 #include "rtc3231.h"
 
-void start();
+
+
 //common anode 0 on 1 0ff
 //      H      G     F     E     D     C     B     A
 //_____________________________________________
@@ -49,14 +50,14 @@ uint8_t posSeg[4] = {0x40, 0x79, 0x24, 0x30}; //0123 display
 
 #define dash 0xBF
 //EEPROM section
-uint8_t op1onHrAddr[] = {10, 11, 12, 13, 14, 15};    //
-uint8_t op1onMinAddr[] = {16, 17, 18, 19, 20, 21};   //
-uint8_t op1offHrAddr[] = {22, 23, 24, 25, 26, 27};   //
-uint8_t op1offMinAddr[] = {28, 29, 30, 31, 32, 33};  //
-uint8_t op2onHrAddr[] = {34, 35, 36, 37, 38, 39};    //
-uint8_t op2onMinAddr[] = {40, 41, 42, 43, 44, 45 };  //
-uint8_t op2offHrAddr[] = {46, 47, 48, 49, 50, 51};   //
-uint8_t op2offMinAddr[] = {52, 53, 54, 55, 56, 57};  //
+uint8_t op1onHrAddr[] = {10, 10, 11, 12, 13, 14, 15};    //we r starting from 1...so keep 0 n 1 same
+uint8_t op1onMinAddr[] = {16, 16, 17, 18, 19, 20, 21};   //
+uint8_t op1offHrAddr[] = {22, 22, 23, 24, 25, 26, 27};   //
+uint8_t op1offMinAddr[] = {28, 28, 29, 30, 31, 32, 33};  //
+uint8_t op2onHrAddr[] = {34, 34, 35, 36, 37, 38, 39};    //
+uint8_t op2onMinAddr[] = {40, 40, 41, 42, 43, 44, 45 };  //
+uint8_t op2offHrAddr[] = {46, 46, 47, 48, 49, 50, 51};   //
+uint8_t op2offMinAddr[] = {52, 52, 53, 54, 55, 56, 57};  //
 
 
 uint8_t op1onHr[] = {24, 24, 24, 24, 24, 24};   //10 11 12 13 14 15
@@ -65,8 +66,8 @@ uint8_t op1offHr[] = {25, 25, 25, 25, 25, 25};  //22 23 24 25 26 27
 uint8_t op1offMin[] = {61, 61, 61, 61, 61, 61}; //28 29 30 31 32 33
 uint8_t op2onHr[] = {24, 24, 24, 24, 24, 24};   //34 35 36 37 38 39
 uint8_t op2onMin[] = {60, 60, 60, 60, 60, 60};  //40 41 42 43 44 45 
-uint8_t op2offHr[] = {24, 24, 24, 24, 24, 24};  //46 47 48 49 50 51
-uint8_t op2offMin[] = {60, 60, 60, 60, 60, 60}; //52 53 54 55 56 57
+uint8_t op2offHr[] = {25, 25, 25, 25, 25, 25};  //46 47 48 49 50 51
+uint8_t op2offMin[] = {61, 61, 61, 61, 61, 61}; //52 53 54 55 56 57
 
 uint8_t op1ActualOn[6];
 uint8_t op1ActualOff[6];
@@ -95,7 +96,6 @@ gnd                           <11                                30>            
                    swCol2     <19                                22>
                    swCol1     <20                                21>               
 *****************************************************************************/
-
 void setDate(uint8_t entered_Hr, uint8_t  entered_Min)
 {
    char setHr, setMin;
@@ -178,7 +178,7 @@ void parser(uint8_t a, uint8_t b, uint8_t c, uint8_t d, bool dot0, bool dot1, bo
    
    for(uint8_t pos = 0; pos <4; pos++)
    {
-      if( ((pos==0) && dot0) || ((pos==1) && dot1) || ((pos==2) && dot2) || ((pos==3) && dot3) )
+      if( ((pos==0) && (dot0==1)) || ((pos==1) && (dot1==1)) || ((pos==2) && (dot2==1)) || ((pos==3) && (dot3==1)) )
       {
          switch(nums[pos])
          {
@@ -204,7 +204,6 @@ void parser(uint8_t a, uint8_t b, uint8_t c, uint8_t d, bool dot0, bool dot1, bo
                      break;                  
          }
       }
-      
       else
       {
          switch(nums[pos])
@@ -231,7 +230,6 @@ void parser(uint8_t a, uint8_t b, uint8_t c, uint8_t d, bool dot0, bool dot1, bo
                      break;                  
          }
       }
-      
    }
 }
 
@@ -570,11 +568,59 @@ bool setDisplayOn() //initial display will be off (1*2 combination will make dis
  * EEPROM HELP****EEPROM HELP****EEPROM HELP****EEPROM HELP
  * *******************************************************************/
 
-//void memoryWrite(uint8_t opOnHr, uint8_t opOnMin, uint8_t opOffHr, uint8_t opOffMin)
-//{}
+void EEPROMwrite(uint8_t address, uint8_t data){
 
-//uint32_t memoryRead()
-//{}
+	// wait for completion of previous
+	while(EECR & (1<<EEWE));
+
+	// setup address and data
+	EEAR = address;
+	EEDR = data;
+
+	// write logical 1 to EEMPE
+	EECR |= (1<<EEMWE);
+
+	// start EEPROM write
+	EECR |= (1<<EEWE);
+
+}
+
+char EEPROMread(uint8_t address){
+
+	// wait for completion
+	while(EECR & (1<<EEWE));
+
+	// set address
+	EEAR = address;
+
+	// start EEPROM read
+	EECR |= (1<<EERE);
+
+	// return data
+	return EEDR;
+
+}
+
+//uint8_t eeprom_read_byte (const uint8_t *__p);
+void readMemorySaved()
+{
+   for(uint8_t reader = 1; reader <= 6; reader++)
+      op1onHr[reader] = EEPROMread(op1onHrAddr[reader]);
+   for(uint8_t reader = 1; reader <= 6; reader++)
+      op1onMin[reader] = EEPROMread(op1onMinAddr[reader]);
+   for(uint8_t reader = 1; reader <= 6; reader++)
+      op1offHr[reader] = EEPROMread(op1offHrAddr[reader]);
+   for(uint8_t reader = 1; reader <= 6; reader++)
+      op1offMin[reader] = EEPROMread(op1offMinAddr[reader]);
+   for(uint8_t reader = 1; reader <= 6; reader++)
+      op2onHr[reader] = EEPROMread(op2onHrAddr[reader]);
+   for(uint8_t reader = 1; reader <= 6; reader++)
+      op2onMin[reader] = EEPROMread(op2onMinAddr[reader]);
+   for(uint8_t reader = 1; reader <= 6; reader++)
+      op2offHr[reader] = EEPROMread(op2offHrAddr[reader]);
+   for(uint8_t reader = 1; reader <= 6; reader++)
+      op2offMin[reader] = EEPROMread(op2offMinAddr[reader]);
+}  
 
 void readOpSlot(uint8_t output, uint8_t slotNo, uint8_t *onHr, uint8_t *onMin, uint8_t *offHr, uint8_t *offMin)
 {
@@ -638,17 +684,19 @@ void eepromSetManualTime(uint8_t output, uint8_t slotNo)
       
       if(output == 1)
       {
-         op1onHr[slotNo] = makeHrOnFromInput;
-         op1onMin[slotNo] = makeMinOnFromInput;
-         op1offHr[slotNo] = makeHrOffFromInput;
-         op1offMin[slotNo] = makeMinOffFromInput;
+         EEPROMwrite(op1onHrAddr[slotNo], makeHrOnFromInput);
+         EEPROMwrite(op1onMinAddr[slotNo], makeMinOnFromInput);
+         EEPROMwrite(op1offHrAddr[slotNo], makeHrOffFromInput);
+         EEPROMwrite(op1offMinAddr[slotNo], makeMinOffFromInput);
+         readMemorySaved();
       }
       else if (output == 2)
       {
-         op2onHr[slotNo] = makeHrOnFromInput;
-         op2onMin[slotNo] = makeMinOnFromInput;
-         op2offHr[slotNo] = makeHrOffFromInput;
-         op2offMin[slotNo] = makeMinOffFromInput;
+         EEPROMwrite(op2onHrAddr[slotNo], makeHrOnFromInput);
+         EEPROMwrite(op2onMinAddr[slotNo], makeMinOnFromInput);
+         EEPROMwrite(op2offHrAddr[slotNo], makeHrOffFromInput);
+         EEPROMwrite(op2offMinAddr[slotNo], makeMinOffFromInput);
+         readMemorySaved();
       }
    }
 }
@@ -687,17 +735,27 @@ void eepromDisplayNclear(uint8_t output, uint8_t slotNo, uint8_t onHr, uint8_t o
          //---to do display clear dialog
          if(output == 1)
          {
-            op1onHr[slotNo] = 88;
-            op1onMin[slotNo] = 88;
-            op1offHr[slotNo] = 88;
-            op1offMin[slotNo] = 88;
+            //op1onHr[slotNo] = 88;
+            //op1onMin[slotNo] = 88;
+            //op1offHr[slotNo] = 88;
+            //op1offMin[slotNo] = 88;
+            EEPROMwrite(op1onHrAddr[slotNo], 88);
+            EEPROMwrite(op1onMinAddr[slotNo], 88);
+            EEPROMwrite(op1offHrAddr[slotNo], 88);
+            EEPROMwrite(op1offMinAddr[slotNo], 88);
+            readMemorySaved();
          }
          else if (output == 2)
          {
-            op2onHr[slotNo] = 88;
-            op2onMin[slotNo] = 88;
-            op2offHr[slotNo] = 88;
-            op2offMin[slotNo] = 88;
+            //op2onHr[slotNo] = 88;
+            //op2onMin[slotNo] = 88;
+            //op2offHr[slotNo] = 88;
+            //op2offMin[slotNo] = 88;
+            EEPROMwrite(op2onHrAddr[slotNo], 88);
+            EEPROMwrite(op2onMinAddr[slotNo], 88);
+            EEPROMwrite(op2offHrAddr[slotNo], 88);
+            EEPROMwrite(op2offMinAddr[slotNo], 88);
+            readMemorySaved();
          }
          break;
       }
@@ -833,15 +891,83 @@ void eepromInit()
    }//end output cond
 }
 
+void relayFunction()
+{
+   //checking relay PC3 & PC4
+   for(uint8_t checker = 0; checker < 6; checker++)   //op1
+   { //Sec , Hour, Min
+      if(op1onHr[checker] < op1offHr[checker])
+      {
+         if((Hour >= op1onHr[checker]) && (Hour <= op1offHr[checker]))
+         {
+            if((Hour == op1onHr[checker])  && Min == op1onMin[checker])
+            { PORTC =   PINC & 0b11110111;} //masking that pin 0(ON) }
+            if(Hour == op1offHr[checker] && Min == op1offMin[checker])
+            { PORTC =   PINC | 0b00001000;} //masking that pin 1(OFF) }
+         }
+      }
+      if(op1onHr[checker] == op1offHr[checker])
+      {
+         if((Hour == op1onHr[checker])  && Min == op1onMin[checker])
+         { PORTC =   PINC & 0b11110111;} //masking that pin 0(ON) }
+         if(Hour == op1offHr[checker] && Min == op1offMin[checker])
+         { PORTC =   PINC | 0b00001000;} //masking that pin 1(OFF) }
+      }
+      if(op1onHr[checker] > op1offHr[checker])
+      {
+         if((Hour >= op1onHr[checker]) || (Hour <= op1offHr[checker]))
+         {
+            if((Hour == op1onHr[checker])  && Min == op1onMin[checker])
+            { PORTC =   PINC & 0b11110111;} //masking that pin 0(ON) }
+            if(Hour == op1offHr[checker] && Min == op1offMin[checker])
+            { PORTC =   PINC | 0b00001000;} //masking that pin 1(OFF) }
+         }
+      }
+      
+   }
+   
+   for(uint8_t checker = 0; checker < 6; checker++)   //op2
+   { //Sec , Hour, Min
+      if(op2onHr[checker] < op2offHr[checker])
+      {
+         if((Hour >= op2onHr[checker]) && (Hour <= op2offHr[checker]))
+         {
+            if((Hour == op2onHr[checker])  && Min == op2onMin[checker])
+            { PORTC =   PINC & 0b11101111;} //masking that pin 0(ON) }
+            if(Hour == op2offHr[checker] && Min == op2offMin[checker])
+            { PORTC =   PINC | 0b00010000;} //masking that pin 1(OFF) }
+         }
+      }
+      if(op2onHr[checker] == op1offHr[checker])
+      {
+         if((Hour == op2onHr[checker])  && Min == op2onMin[checker])
+         { PORTC =   PINC & 0b11101111;} //masking that pin 0(ON) }
+         if(Hour == op2offHr[checker] && Min == op2offMin[checker])
+         { PORTC =   PINC | 0b00010000;} //masking that pin 1(OFF) }
+      }
+      if(op2onHr[checker] > op2offHr[checker])
+      {
+         if((Hour >= op2onHr[checker]) || (Hour <= op2offHr[checker]))
+         {
+            if((Hour == op2onHr[checker])  && Min == op2onMin[checker])
+            { PORTC =   PINC & 0b11101111;} //masking that pin 0(ON) }
+            if(Hour == op2offHr[checker] && Min == op2offMin[checker])
+            { PORTC =   PINC | 0b00010000;} //masking that pin 1(OFF) }
+         }
+      }
+      
+   }
+}
 
 int main()
 {
+   readMemorySaved();
    DDRA = 0xff;
    DDRC = 0xff;
    DDRD = 0x78;      //012  = input, 4567 = output for sw
    
    PORTD = 0xFF;
-   PORTC = 0xF0;
+   PORTC = 0xFC;
    PORTA = 0xBF;  //----
    init_ds3231();
    
@@ -898,20 +1024,7 @@ int main()
          PORTC = PINC & 0b00001111;
       }
       
-      //checking relay PC3 & PC4
-      if(Hour == 21)
-      {
-         if(Min >= 0 && Min < 5)
-            PORTC =   PINC & 0b11110111; //masking that pin 0(ON)
-         else
-         {
-            PORTC =   PINC | 0b00001000; //masking that pin 1(OFF)
-         }
-      }
-      else
-      {
-         PORTC =   PINC | 0b00001000; //masking that pin 1(OFF) //beacuse pin will be 1 at any cost others will remain same
-      }
+      relayFunction();
    }
 
    return 0;
