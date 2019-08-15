@@ -933,26 +933,26 @@ void relayFunction()
          if((Hour >= op2onHr[checker]) && (Hour <= op2offHr[checker]))
          {
             if((Hour == op2onHr[checker])  && Min == op2onMin[checker])
-            { PORTC =   PINC & 0b11101111;} //masking that pin 0(ON) }
+            { PORTC =   PINC & 0b11111011;} //masking that pin 0(ON) }
             if(Hour == op2offHr[checker] && Min == op2offMin[checker])
-            { PORTC =   PINC | 0b00010000;} //masking that pin 1(OFF) }
+            { PORTC =   PINC | 0b00000100;} //masking that pin 1(OFF) }
          }
       }
       if(op2onHr[checker] == op1offHr[checker])
       {
          if((Hour == op2onHr[checker])  && Min == op2onMin[checker])
-         { PORTC =   PINC & 0b11101111;} //masking that pin 0(ON) }
+         { PORTC =   PINC & 0b11111011;} //masking that pin 0(ON) }
          if(Hour == op2offHr[checker] && Min == op2offMin[checker])
-         { PORTC =   PINC | 0b00010000;} //masking that pin 1(OFF) }
+         { PORTC =   PINC | 0b00000100;} //masking that pin 1(OFF) }
       }
       if(op2onHr[checker] > op2offHr[checker])
       {
          if((Hour >= op2onHr[checker]) || (Hour <= op2offHr[checker]))
          {
             if((Hour == op2onHr[checker])  && Min == op2onMin[checker])
-            { PORTC =   PINC & 0b11101111;} //masking that pin 0(ON) }
+            { PORTC =   PINC & 0b11111011;} //masking that pin 0(ON) }
             if(Hour == op2offHr[checker] && Min == op2offMin[checker])
-            { PORTC =   PINC | 0b00010000;} //masking that pin 1(OFF) }
+            { PORTC =   PINC | 0b00000100;} //masking that pin 1(OFF) }
          }
       }
       
