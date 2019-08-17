@@ -38,9 +38,11 @@
 
 rtc_t today;
 rtc_t set_date;
-uint8_t Sec , Hour, Min;
+uint8_t Sec = 0 , Hour = 0, Min = 0;
 //enum view {hourMin, minSec};
 bool currentView = 0;   //0 for hr-min, 1 for min-sec
+bool rtcFlag = true;
+static volatile long counterVal = 3;
 
 bool globalDisplayFlag = false;
 uint8_t numArrayDot[] = {0x40 ,  0x79 ,  0x24 ,  0x30 ,  0x19 ,  0x12 ,  0x02 ,  0x78 ,  0x00 ,  0x10 }; //with dots
@@ -49,6 +51,7 @@ uint8_t segArray[]={0x70,0xB0, 0xD0, 0xE0};  //
 uint8_t posSeg[4] = {0x40, 0x79, 0x24, 0x30}; //0123 display
 
 #define dash 0xBF
+#define totalOpSlots 6
 //EEPROM section
 uint8_t op1onHrAddr[] = {10, 10, 11, 12, 13, 14, 15};    //we r starting from 1...so keep 0 n 1 same
 uint8_t op1onMinAddr[] = {16, 16, 17, 18, 19, 20, 21};   //
@@ -118,6 +121,17 @@ void setDate(uint8_t entered_Hr, uint8_t  entered_Min)
    rtc.year = dec2bcd(19);  //2017
    rtc.weekDay = 7;         // Friday: 5th day of week considering Monday as first day.
    ds3231_SetDateTime(&rtc);
+}
+
+void GetDateTimeTimer()
+{
+   Sec = counterVal;
+   if(counterVal > 59)
+   { Min++; counterVal = 0;}
+   if(Min > 59)
+      { Hour++; Min = 0; }
+   if(Hour > 23)
+      Hour = 0;
 }
 
 void seven_disp()
@@ -711,12 +725,12 @@ void eepromDisplayNclear(uint8_t output, uint8_t slotNo, uint8_t onHr, uint8_t o
       if(showOnOff)
          {
             timeToDigitParser(onHr, onMin, &seg1, &seg2, &seg3, &seg4);
-            parser(seg1, seg2, seg3, seg4, 0, 1, 0, 1);  //special made show on parser will display . at end
+            parser(seg1, seg2, seg3, seg4, 0, 1, 0, 0);  //showing On time.......(. at end)
          }
       else
          {
             timeToDigitParser(offHr, offMin, &seg1, &seg2, &seg3, &seg4);
-            parser(seg1, seg2, seg3, seg4, 0, 1, 0, 0);
+            parser(seg1, seg2, seg3, seg4, 0, 1, 0, 1); //showing offtime......(. at middle)
          }
 
       temp =  detect();
@@ -725,6 +739,7 @@ void eepromDisplayNclear(uint8_t output, uint8_t slotNo, uint8_t onHr, uint8_t o
       if(temp == 10)     //pressed *
       {
          showOnOff = showOnOff ^ 1;
+         _delay_ms (500);
       }
       else if(temp == 11)     //pressed *
       {
@@ -894,69 +909,118 @@ void eepromInit()
 void relayFunction()
 {
    //checking relay PC3 & PC4
-   for(uint8_t checker = 0; checker < 6; checker++)   //op1
+   for(uint8_t checker = 0; checker < totalOpSlots; checker++)   //op1 should on below cond or off, if on then break come next time
    { //Sec , Hour, Min
       if(op1onHr[checker] < op1offHr[checker])
       {
          if((Hour >= op1onHr[checker]) && (Hour <= op1offHr[checker]))
          {
-            if((Hour == op1onHr[checker])  && Min == op1onMin[checker])
-            { PORTC =   PINC & 0b11110111;} //masking that pin 0(ON) }
-            if(Hour == op1offHr[checker] && Min == op1offMin[checker])
-            { PORTC =   PINC | 0b00001000;} //masking that pin 1(OFF) }
+            if((Hour == op1onHr[checker])  && Min >= op1onMin[checker])    //if actualOnHr == setOnHour, check minute
+            { PORTC =   PINC & 0b11110111; break;} //masking that pin 0(ON) }
+            if(Hour == op1offHr[checker] && Min <= op1offMin[checker])     //if actualOffHr == setOffHour, check min
+            { PORTC =   PINC & 0b11110111; break;} //masking that pin 0(ON) }
+            if( Hour > op1onHr[checker] && Hour < op1offHr[checker])       //if ActualHour is between sethour, then on 
+            { PORTC =   PINC & 0b11110111; break;} //masking that pin 0(ON) }
          }
       }
       if(op1onHr[checker] == op1offHr[checker])
       {
-         if((Hour == op1onHr[checker])  && Min == op1onMin[checker])
-         { PORTC =   PINC & 0b11110111;} //masking that pin 0(ON) }
-         if(Hour == op1offHr[checker] && Min == op1offMin[checker])
-         { PORTC =   PINC | 0b00001000;} //masking that pin 1(OFF) }
+         if(Min >= op1onMin[checker] && Min < op1offMin[checker])
+         { PORTC =   PINC & 0b11110111; break;} //masking that pin 0(ON) }
       }
       if(op1onHr[checker] > op1offHr[checker])
       {
-         if((Hour >= op1onHr[checker]) || (Hour <= op1offHr[checker]))
+         if(((Hour >= op1onHr[checker]) && Hour < 24) || (Hour <= op1offHr[checker]))
          {
-            if((Hour == op1onHr[checker])  && Min == op1onMin[checker])
-            { PORTC =   PINC & 0b11110111;} //masking that pin 0(ON) }
-            if(Hour == op1offHr[checker] && Min == op1offMin[checker])
-            { PORTC =   PINC | 0b00001000;} //masking that pin 1(OFF) }
+            if((Hour == op1onHr[checker])  && Min >= op1onMin[checker])
+            { PORTC =   PINC & 0b11110111; break;} //masking that pin 0(ON) }
+            if(Hour == op1offHr[checker] && Min <= op1offMin[checker])
+            { PORTC =   PINC & 0b11110111; break;} //masking that pin 0(ON) }
+            if( Hour > op1onHr[checker] && Hour < op1offHr[checker])  
+            { PORTC =   PINC & 0b11110111; break;} //masking that pin 0(ON) }
          }
       }
-      
+      if(checker == (totalOpSlots-1)) //coz loop starts from 0, totalOpSlots count from 1
+      {
+         { PORTC =   PINC | 0b00001000;} //masking that pin 1(OFF) } //above conditions are failed to on the op..so off
+      }
    }
    
-   for(uint8_t checker = 0; checker < 6; checker++)   //op2
+   for(uint8_t checker = 0; checker < totalOpSlots; checker++)   //op2
    { //Sec , Hour, Min
       if(op2onHr[checker] < op2offHr[checker])
       {
          if((Hour >= op2onHr[checker]) && (Hour <= op2offHr[checker]))
          {
-            if((Hour == op2onHr[checker])  && Min == op2onMin[checker])
-            { PORTC =   PINC & 0b11111011;} //masking that pin 0(ON) }
-            if(Hour == op2offHr[checker] && Min == op2offMin[checker])
-            { PORTC =   PINC | 0b00000100;} //masking that pin 1(OFF) }
+            if((Hour == op2onHr[checker])  && Min >= op2onMin[checker])    //if actualOnHr == setOnHour, check minute
+            { PORTC =   PINC & 0b11111011; break;} //masking op 2 (ON) }
+            if(Hour == op2offHr[checker] && Min <= op2offMin[checker])     //if actualOffHr == setOffHour, check min
+            { PORTC =   PINC & 0b11111011; break;} //masking op 2 (ON) }
+            if( Hour > op2onHr[checker] && Hour < op2offHr[checker])       //if ActualHour is between sethour, then on 
+            { PORTC =   PINC & 0b11111011; break;} //masking op 2 (ON) }
          }
       }
-      if(op2onHr[checker] == op1offHr[checker])
+      if(op2onHr[checker] == op2offHr[checker])
       {
-         if((Hour == op2onHr[checker])  && Min == op2onMin[checker])
-         { PORTC =   PINC & 0b11111011;} //masking that pin 0(ON) }
-         if(Hour == op2offHr[checker] && Min == op2offMin[checker])
-         { PORTC =   PINC | 0b00000100;} //masking that pin 1(OFF) }
+         if(Min >= op2onMin[checker] && Min < op2offMin[checker])
+         { PORTC =   PINC & 0b11111011; break;} //masking op 2 (ON) }
       }
       if(op2onHr[checker] > op2offHr[checker])
       {
-         if((Hour >= op2onHr[checker]) || (Hour <= op2offHr[checker]))
+         if(((Hour >= op2onHr[checker]) && Hour < 24) || (Hour <= op2offHr[checker]))
          {
-            if((Hour == op2onHr[checker])  && Min == op2onMin[checker])
-            { PORTC =   PINC & 0b11111011;} //masking that pin 0(ON) }
-            if(Hour == op2offHr[checker] && Min == op2offMin[checker])
-            { PORTC =   PINC | 0b00000100;} //masking that pin 1(OFF) }
+            if((Hour == op2onHr[checker])  && Min >= op2onMin[checker])
+            { PORTC =   PINC & 0b11111011; break;} //masking op 2 (ON) }
+            if(Hour == op2offHr[checker] && Min <= op2offMin[checker])
+            { PORTC =   PINC & 0b11111011; break;} //masking op 2 (ON) }
+            if( Hour > op2onHr[checker] && Hour < op2offHr[checker])  
+            { PORTC =   PINC & 0b11111011; break;} //masking op 2 (ON) }
          }
       }
-      
+      if(checker == (totalOpSlots-1)) //coz loop starts from 0, totalOpSlots count from 1
+      {
+         { PORTC =   PINC | 0b00000100;} //masking op 2 (OFF) }  //above conditions are failed to on the op..so off
+      }
    }
+}
+
+void initTimer()
+{
+/*calculation......
+ * 1 / 4000000 = 2.5e-07 = 2.5 x 10 ^ -7 = 0.00000025 
+ * maximum capabilty = 65536 in counter register...
+ * so time will be gone after counting = 65535 * 0.00000025 = 0.01638375
+ * so 1 second will be 1000 mili second..
+ * 1000 / 0.01638375 = 61036.0875868 = 61036
+ * //timer interrupt 1 second
+   OCR1A = 15624;    //output compare register
+
+   TCCR1B |= (1 << WGM12);    //timer counter control register
+   // Mode 4, CTC on OCR1A
+
+   TIMSK |= (1 << OCIE1A);    //Timer interrupt mask register
+ * 
+ * sei();      //start interrupt
+ * 
+ */
+ 
+   //OCR1A = 1000; 
+
+   //TCCR1B |= (1 << WGM12);
+
+   //TIMSK |= (1 << OCIE1A);
+   
+   
+   //overflow
+   /***
+    * 65535 max
+    * 1 sec  = 4000000
+    * 1024 prescale = 4000000 / 1024 = 3906
+    * 65535 - 3906 = 61629
+    * ***/
+   TCCR1A = 0x00;
+   TCCR1B = (1<<CS10) | (1<<CS12);;  // Timer mode with 1024 prescler
+   TIMSK = (1 << TOIE1) ;   // Enable timer1 overflow interrupt(TOIE1)
 }
 
 int main()
@@ -969,37 +1033,72 @@ int main()
    PORTD = 0xFF;
    PORTC = 0xFC;
    PORTA = 0xBF;  //----
-   init_ds3231();
    
-   //parser(0, 5, 5, 9);
-   posSeg[0] = 0xCE;    //r
-   posSeg[1] = 0xA1;     //D
-   posSeg[2] = 0x91;     //y
-   posSeg[3] = 0xFF;     //no disp   
+   initTimer();
+   
+   if(detect() == 5)
+   {
+      parser(5, 5, 5, 5, 0, 1, 0, 0);
+      while(1)
+      {
+         seven_disp();
+         if(detect() == 10)
+            { rtcFlag = false; sei(); break; }
+         else if(detect() == 11)
+            break;
+      }
+   }
+   
+   if(rtcFlag)
+      init_ds3231();
+   
+   
+   //local variables...
+   uint8_t prevMinute = 60; //invalid
    
    while(1)
    {
-      ds3231_GetDateTime(&today);
-      Sec = bcd2dec(today.sec);
-      Hour = bcd2dec(today.hour);
-      Min = bcd2dec(today.min);
       uint8_t indx0 =0, indx1 = 0, indx2 =0, indx3 = 0, indx4 =0, indx5 = 0;
-     
-      timeParser(&indx0, &indx1, &indx2, &indx3, &indx4, &indx5);
-      currentView ? parser(indx2, indx3, indx4, indx5, 0, 1, 0, 0) : parser(indx0, indx1, indx2, indx3, 0, 1, 0, 0);
+      if(rtcFlag)
+      {
+         ds3231_GetDateTime(&today);
+         Sec = bcd2dec(today.sec);
+         Hour = bcd2dec(today.hour);
+         Min = bcd2dec(today.min);
+      }
+      else
+      {
+         GetDateTimeTimer();
+      }
       
+      timeParser(&indx0, &indx1, &indx2, &indx3, &indx4, &indx5); //indx0-1 : HH,2-3 : MM,4-5: SS
+      
+      if(globalDisplayFlag)
+      {
+         currentView ? parser(indx2, indx3, indx4, indx5, 0, 1, 0, 1) : parser(indx0, indx1, indx2, indx3, 0, 1, 0, 0);
+         seven_disp();
+      }
+      else
+      {
+         parser(0,0,0,0, 0, 0, 0, 0);  //total off for powr saving mode
+         PORTC = PINC & 0b00001111;
+      }
       
       uint8_t keyPress = detect();
       if(keyPress == 10)
       {
-         //start switch presssed...so setting time
-         setTime();
+         if(!rtcFlag)   //if timer is running * will reset the timer
+            { counterVal = 0; Sec = 0; Min = 0; Hour = 0; }
+         else{
+            //start switch presssed...so setting time
+            setTime();
+         }
       }
       else if(keyPress == 11)
       {
          //start switch presssed...so setting time
          currentView = currentView^1;
-         _delay_ms (100);
+         _delay_ms (500);
       }
       else if(keyPress == 1)
       {
@@ -1015,27 +1114,30 @@ int main()
       {} 
       //end of keystrokes logic------------
       
-      if(globalDisplayFlag)
+      if(prevMinute != Min)
       {
-         seven_disp();
+         relayFunction();
+         prevMinute = Min;
       }
-      else
-      {
-         PORTC = PINC & 0b00001111;
-      }
-      
-      relayFunction();
    }
 
    return 0;
 }
 
 
+//ISR (TIMER1_COMPA_vect)
+//{
+	//// action to be done every 1 sec
+	//counterVal++;
+//}
 
 
-
-
-
+ISR (TIMER1_OVF_vect)    // Timer1 ISR
+{
+   //TCNT1 = 63974;   // for 1 sec at 16 MHz
+   TCNT1 = 61629;   // for 1 sec at 16 MHz
+   counterVal++;
+}
 
 
 
