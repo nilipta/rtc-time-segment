@@ -55,7 +55,7 @@ uint8_t posSeg[4] = {0x40, 0x79, 0x24, 0x30}; //0123 display
 #define letterC 0xC6
 #define letterL 0xC7
 #define letterR 0xCE
-#define questionMark 0xC2
+#define questionMark 0x2C
 
 //EEPROM section
 uint8_t op1onHrAddr[] = {10, 10, 11, 12, 13, 14, 15};    //we r starting from 1...so keep 0 n 1 same
@@ -968,7 +968,7 @@ void relayFunction()
       }
       if(op2onHr[checker] == op2offHr[checker])
       {
-         if(Min >= op2onMin[checker] && Min < op2offMin[checker])
+         if(Min >= op2onMin[checker] && Min < op2offMin[checker] && Hour ==op1onHr[checker]) //hour checking is necessary coz other slot can check only minute and on the output
          { PORTC =   PINC & 0b11111011; break;} //masking op 2 (ON) }
       }
       if(op2onHr[checker] > op2offHr[checker])
