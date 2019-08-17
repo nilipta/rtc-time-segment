@@ -52,6 +52,11 @@ uint8_t posSeg[4] = {0x40, 0x79, 0x24, 0x30}; //0123 display
 
 #define dash 0xBF
 #define totalOpSlots 6
+#define letterC 0xC6
+#define letterL 0xC7
+#define letterR 0xCE
+#define questionMark 0xC2
+
 //EEPROM section
 uint8_t op1onHrAddr[] = {10, 10, 11, 12, 13, 14, 15};    //we r starting from 1...so keep 0 n 1 same
 uint8_t op1onMinAddr[] = {16, 16, 17, 18, 19, 20, 21};   //
@@ -339,7 +344,7 @@ uint8_t detect()
    for(uint8_t  i = 0; i < 4; i++ )
    {
       PORTD = scan[i];
-      _delay_ms (1);
+      _delay_us (100);
       uint8_t val = PIND;
       
       uint8_t swVal = (val & 0x7F);
@@ -618,21 +623,21 @@ char EEPROMread(uint8_t address){
 //uint8_t eeprom_read_byte (const uint8_t *__p);
 void readMemorySaved()
 {
-   for(uint8_t reader = 1; reader <= 6; reader++)
-      op1onHr[reader] = EEPROMread(op1onHrAddr[reader]);
-   for(uint8_t reader = 1; reader <= 6; reader++)
+   for(uint8_t reader = 1; reader <= totalOpSlots; reader++)
+      op1onHr[reader] = EEPROMread(op1onHrAddr[reader]); 
+   for(uint8_t reader = 1; reader <= totalOpSlots; reader++)
       op1onMin[reader] = EEPROMread(op1onMinAddr[reader]);
-   for(uint8_t reader = 1; reader <= 6; reader++)
+   for(uint8_t reader = 1; reader <= totalOpSlots; reader++)
       op1offHr[reader] = EEPROMread(op1offHrAddr[reader]);
-   for(uint8_t reader = 1; reader <= 6; reader++)
+   for(uint8_t reader = 1; reader <= totalOpSlots; reader++)
       op1offMin[reader] = EEPROMread(op1offMinAddr[reader]);
-   for(uint8_t reader = 1; reader <= 6; reader++)
+   for(uint8_t reader = 1; reader <= totalOpSlots; reader++)
       op2onHr[reader] = EEPROMread(op2onHrAddr[reader]);
-   for(uint8_t reader = 1; reader <= 6; reader++)
+   for(uint8_t reader = 1; reader <= totalOpSlots; reader++)
       op2onMin[reader] = EEPROMread(op2onMinAddr[reader]);
-   for(uint8_t reader = 1; reader <= 6; reader++)
+   for(uint8_t reader = 1; reader <= totalOpSlots; reader++)
       op2offHr[reader] = EEPROMread(op2offHrAddr[reader]);
-   for(uint8_t reader = 1; reader <= 6; reader++)
+   for(uint8_t reader = 1; reader <= totalOpSlots; reader++)
       op2offMin[reader] = EEPROMread(op2offMinAddr[reader]);
 }  
 
@@ -747,25 +752,26 @@ void eepromDisplayNclear(uint8_t output, uint8_t slotNo, uint8_t onHr, uint8_t o
       }
       else if(temp == 0)     //pressed 0 for clearing time entry to 88(invalid)
       {
-         //---to do display clear dialog
-         if(output == 1)
+         bool clearFlag = false;
+         hexParser(letterC, letterL, letterR, questionMark);   //C   L  R  ?
+         while(1)
          {
-            //op1onHr[slotNo] = 88;
-            //op1onMin[slotNo] = 88;
-            //op1offHr[slotNo] = 88;
-            //op1offMin[slotNo] = 88;
+            if(detect() == 10)
+               {clearFlag = true; break;}
+            if(detect() == 11)
+               {clearFlag = false; break;}
+            seven_disp();
+         }
+         if(output == 1 && clearFlag)
+         {
             EEPROMwrite(op1onHrAddr[slotNo], 88);
             EEPROMwrite(op1onMinAddr[slotNo], 88);
             EEPROMwrite(op1offHrAddr[slotNo], 88);
             EEPROMwrite(op1offMinAddr[slotNo], 88);
             readMemorySaved();
          }
-         else if (output == 2)
+         else if (output == 2 && clearFlag)
          {
-            //op2onHr[slotNo] = 88;
-            //op2onMin[slotNo] = 88;
-            //op2offHr[slotNo] = 88;
-            //op2offMin[slotNo] = 88;
             EEPROMwrite(op2onHrAddr[slotNo], 88);
             EEPROMwrite(op2onMinAddr[slotNo], 88);
             EEPROMwrite(op2offHrAddr[slotNo], 88);
@@ -925,7 +931,7 @@ void relayFunction()
       }
       if(op1onHr[checker] == op1offHr[checker])
       {
-         if(Min >= op1onMin[checker] && Min < op1offMin[checker])
+         if(Min >= op1onMin[checker] && Min < op1offMin[checker] && Hour ==op1onHr[checker]) //hour checking is necessary coz other slot can check only minute and on the output
          { PORTC =   PINC & 0b11110111; break;} //masking that pin 0(ON) }
       }
       if(op1onHr[checker] > op1offHr[checker])
@@ -1084,8 +1090,8 @@ int main()
          PORTC = PINC & 0b00001111;
       }
       
-      uint8_t keyPress = detect();
-      if(keyPress == 10)
+      //uint8_t keyPress = detect();
+      if(detect() == 10)
       {
          if(!rtcFlag)   //if timer is running * will reset the timer
             { counterVal = 0; Sec = 0; Min = 0; Hour = 0; }
@@ -1094,24 +1100,22 @@ int main()
             setTime();
          }
       }
-      else if(keyPress == 11)
+      if(detect() == 11)
       {
          //start switch presssed...so setting time
          currentView = currentView^1;
          _delay_ms (500);
       }
-      else if(keyPress == 1)
+      if(detect() == 1)
       {
          //decide if seven segment should be on or off
          setDisplayOn();
       }
-      else if(keyPress == 0)
+      if(detect() == 0)
       {
          //Write to EEPROM memory if 0 pressed
          eepromInit();
       }
-      else
-      {} 
       //end of keystrokes logic------------
       
       if(prevMinute != Min)
