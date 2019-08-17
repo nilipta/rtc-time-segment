@@ -968,7 +968,7 @@ void relayFunction()
       }
       if(op2onHr[checker] == op2offHr[checker])
       {
-         if(Min >= op2onMin[checker] && Min < op2offMin[checker] && Hour ==op1onHr[checker]) //hour checking is necessary coz other slot can check only minute and on the output
+         if(Min >= op2onMin[checker] && Min < op2offMin[checker] && Hour == op2onHr[checker]) //hour checking is necessary coz other slot can check only minute and on the output
          { PORTC =   PINC & 0b11111011; break;} //masking op 2 (ON) }
       }
       if(op2onHr[checker] > op2offHr[checker])
