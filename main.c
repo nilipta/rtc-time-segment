@@ -45,7 +45,9 @@ bool rtcFlag = true;
 static volatile long counterVal = 3;
 
 uint8_t globalDetectNumber = 0;
-bool globalDisplayFlag = true;
+uint8_t globalStartingMinute = 0;
+bool globalDisplayFlag = false;
+bool globalOneTimeCHeck = false; //its based on minute change logic... so safeside 3 min max (3Times-- = 0)
 bool waitFlag = false;     //it prevents enter enter enter in function
 uint8_t numArrayDot[] = {0x40 ,  0x79 ,  0x24 ,  0x30 ,  0x19 ,  0x12 ,  0x02 ,  0x78 ,  0x00 ,  0x10 }; //with dots
 uint8_t numArray[] = {0xC0 ,  0xF9 ,  0xA4 ,  0xB0 ,  0x99 ,  0x92 ,  0x82 ,  0xF8 ,  0x80 ,  0x90 }; //without dots
@@ -372,7 +374,11 @@ uint8_t detect()
    if((PIND & 0x0F) == 0x0e)
       return 10;        //means enter switch is pressed
    else if((PIND & 0x0F) == 0x0d)
-      return 11;        //means Cancel switch is pressed
+      {
+        globalOneTimeCHeck = true;
+        globalDisplayFlag = true;  
+        return 11;        //means Cancel switch is pressed
+      }
    else if((PIND & 0x0F) == 0x0b) //means + is pressed
    {
       uint8_t temp = 0;
@@ -554,42 +560,6 @@ void  setTime()
       makeMinFromInput = ((cap3 * 10) + cap4);
       setDate(makeHrFromInput, makeMinFromInput);
    }
-}
-
-bool setDisplayOn() //initial display will be off (1*2 combination will make disp on)
-{
-   bool checkStep1 = false;
-   parser(9, 0, 0, 1, 0, 0, 0, 0);
-  while(1) //check *
-  {
-      //detecting button press for numbers
-      uint8_t temp =  detect();
-      if(temp == 10)     //pressed *
-      {
-         checkStep1 = true;
-         break;
-      }
-      else if(temp == 11)     //pressed *
-      {
-         break;
-      }
-      else 
-      {
-         
-      }
-      seven_disp();
-   }//while1
-
-   if(checkStep1)
-   {
-      globalDisplayFlag = true;
-   }
-   else
-   {
-      globalDisplayFlag = false;
-   }
-
-   return false;
 }
 
 /************************************************************
@@ -834,11 +804,7 @@ void eepromDisplayNclear(uint8_t output, uint8_t slotNo, uint8_t onHr, uint8_t o
 
 void eepromInit()
 {
-   bool checkStep1 = false;
-
    uint8_t temp, outputSelect = 0;
-   
-   
    while(1) //check op 1 or op2  ????
    {
       if(outputSelect == 0)
@@ -1096,24 +1062,23 @@ int main()
    readMemorySaved();
    DDRA = 0xff;
    DDRC = 0xff;
-   DDRD = 0x78;      //012  = input, 4567 = output for sw
+   DDRD = 0x70;      //012  = input, 4567 = output for sw
    
    PORTD = 0xFF;
    PORTC = 0xFC;
    PORTA = 0xBF;  //----
    
    initTimer();
-   
-   if(detect() == 5)
+   globalDisplayFlag = !globalDisplayFlag;
+   uint8_t anyTimerFlag = detect();
+   if( anyTimerFlag == 10 || anyTimerFlag == 11 || (anyTimerFlag <10 && anyTimerFlag >=0))
    {
       parser(5, 5, 5, 5, 0, 1, 0, 0);
       while(1)
       {
          seven_disp();
-         if(detect() == 10)
+         if(detect() == 11)
             { rtcFlag = false; sei(); break; }
-         else if(detect() == 11)
-            break;
       }
    }
    
@@ -1169,25 +1134,12 @@ int main()
          currentView = currentView^1;
          _delay_ms (500);
       }
-      if(detect() == 1)
-      {
-         //decide if seven segment should be on or off
-         //setDisplayOn();
-         parser(5, 5, 5, 5, 0, 1, 0, 0);
-         while(1)
-         {
-            seven_disp();
-         }
-      }
-      if(detect() == 0)
-      {
-         //Write to EEPROM memory if 0 pressed
-          eepromInit();
-      }
       //end of keystrokes logic------------
       
       if(prevMinute != Min)
       {
+         if(!globalOneTimeCHeck && prevMinute != 60)
+            { globalDisplayFlag = false; globalOneTimeCHeck = true;} // this will do onetime off the led
          relayFunction();
          prevMinute = Min;
       }
