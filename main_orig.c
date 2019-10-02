@@ -44,27 +44,17 @@ bool currentView = 0;   //0 for hr-min, 1 for min-sec
 bool rtcFlag = true;
 static volatile long counterVal = 3;
 
-uint8_t globalDetectNumber = 0;
-bool globalDisplayFlag = true;
-bool waitFlag = false;     //it prevents enter enter enter in function
+bool globalDisplayFlag = false;
 uint8_t numArrayDot[] = {0x40 ,  0x79 ,  0x24 ,  0x30 ,  0x19 ,  0x12 ,  0x02 ,  0x78 ,  0x00 ,  0x10 }; //with dots
-uint8_t numArray[] = {0xC0 ,  0xF9 ,  0xA4 ,  0xB0 ,  0x99 ,  0x92 ,  0x82 ,  0xF8 ,  0x80 ,  0x90 }; //without dots
+uint8_t numArray[] = {0xC0 ,  0xF9 ,  0xA4 ,  0xB0 ,  0x99 ,  0x92 ,  0x82 ,  0xF8 ,  0x80 ,  0x90 }; //with dots
 uint8_t segArray[]={0x70,0xB0, 0xD0, 0xE0};  //
 uint8_t posSeg[4] = {0x40, 0x79, 0x24, 0x30}; //0123 display
 
 #define dash 0xBF
 #define totalOpSlots 6
 #define letterC 0xC6
-#define letterD 0xA1
-#define letterE 0x86
-#define letterH 0x89
 #define letterL 0xC7
-#define letterN 0xAB
 #define letterR 0xCE
-#define letterP 0x8C
-#define letterO 0xC0
-#define letterS 0x92
-#define letterT 0x87
 #define questionMark 0x2C
 
 //EEPROM section
@@ -78,14 +68,14 @@ uint8_t op2offHrAddr[] = {46, 46, 47, 48, 49, 50, 51};   //
 uint8_t op2offMinAddr[] = {52, 52, 53, 54, 55, 56, 57};  //
 
 
-uint8_t op1onHr[] = {24, 24, 24, 24, 24, 24, 24};   //10 11 12 13 14 15
-uint8_t op1onMin[] = {60, 60, 60, 60, 60, 60, 60};  //16 17 18 19 20 21
-uint8_t op1offHr[] = {25, 25, 25, 25, 25, 25, 25};  //22 23 24 25 26 27
-uint8_t op1offMin[] = {61, 61, 61, 61, 61, 61, 61}; //28 29 30 31 32 33
-uint8_t op2onHr[] = {24, 24, 24, 24, 24, 24, 24};   //34 35 36 37 38 39
-uint8_t op2onMin[] = {60, 60, 60, 60, 60, 60, 60};  //40 41 42 43 44 45 
-uint8_t op2offHr[] = {25, 25, 25, 25, 25, 25, 25};  //46 47 48 49 50 51
-uint8_t op2offMin[] = {61, 61, 61, 61, 61, 61, 61}; //52 53 54 55 56 57
+uint8_t op1onHr[] = {24, 24, 24, 24, 24, 24};   //10 11 12 13 14 15
+uint8_t op1onMin[] = {60, 60, 60, 60, 60, 60};  //16 17 18 19 20 21
+uint8_t op1offHr[] = {25, 25, 25, 25, 25, 25};  //22 23 24 25 26 27
+uint8_t op1offMin[] = {61, 61, 61, 61, 61, 61}; //28 29 30 31 32 33
+uint8_t op2onHr[] = {24, 24, 24, 24, 24, 24};   //34 35 36 37 38 39
+uint8_t op2onMin[] = {60, 60, 60, 60, 60, 60};  //40 41 42 43 44 45 
+uint8_t op2offHr[] = {25, 25, 25, 25, 25, 25};  //46 47 48 49 50 51
+uint8_t op2offMin[] = {61, 61, 61, 61, 61, 61}; //52 53 54 55 56 57
 
 uint8_t op1ActualOn[6];
 uint8_t op1ActualOff[6];
@@ -93,26 +83,26 @@ uint8_t op2ActualOn[6];
 uint8_t op2ActualOff[6];
 
 /*****************************************************************************
-            PB0               < 1                                40>   A         PA0
-            PB1               < 2                                39>   B         PA1
-            PB2               < 3                                38>   C         PA2
-            PB3               < 4                                37>   D         PA3
-            PB4               < 5                                36>   E         PA4
-            PB5               < 6                                35>   F         PA5
-            PB6               < 7                                34>   G         PA6
-            PB7               < 8                                33>   H         PA7
-            RST               < 9                                32>             REF
-vcc         VCC               <10                                31>             GND
-gnd         GND               <11                                30>             VCC
-            XTAL              <12                                29>    D0       PC7
-            XTAL              <13                                28>    D1       PC6
-            PD0    enter      <14                                27>    D2       PC5
-            PD1    cancel     <15                                26>    D3       PC4
-            PD2    ++++++     <16                                25>    op       PC3
-            PD3    ------     <17                                24>    op       PC2
-            PD4               <18                                23>             PC1
-            PD5               <19                                22>             PC0
-            PD6               <20                                21>             PD7
+                              < 1                                40>   A        PA0
+                              < 2                                39>   B        PA1
+                              < 3                                38>   C
+                              < 4                                37>   D
+                              < 5                                36>   E
+                              < 6                                35>   F
+                              < 7                                34>   G
+                              < 8                                33>   H
+                              < 9                                32>   I         PA7
+vcc                           <10                                31>             GND
+gnd                           <11                                30>             VCC
+                              <12                                29>    D0
+                              <13                                28>    D1
+                   SwRow3     <14                                27>    D2
+                   SwRow2     <15                                26>    D3
+                   SwRow1     <16                                25>
+                   swCol4     <17                                24>
+                   swCol3     <18                                23>
+                   swCol2     <19                                22>
+                   swCol1     <20                                21>               
 *****************************************************************************/
 void setDate(uint8_t entered_Hr, uint8_t  entered_Min)
 {
@@ -270,24 +260,6 @@ void hexParser(uint8_t a, uint8_t b, uint8_t c, uint8_t d)
    posSeg[3] = d; 
 }
 
-void insideDetectNumParser(uint8_t num) //what the number ex 12---- it will display - - 1 2
-{
-   if(num >= 10)
-      {
-            posSeg[0] = numArray[0]; 
-            posSeg[1] = numArray[0]; 
-            posSeg[2] = numArray[num / 10];
-            posSeg[3] = numArray[num % 10];
-      }
-      else
-      {
-            posSeg[0] = numArray[0]; 
-            posSeg[1] = numArray[0]; 
-            posSeg[2] = numArray[0]; 
-            posSeg[3] = numArray[num]; 
-      }
-}
-
 void timeParser(uint8_t *a, uint8_t *b, uint8_t *c, uint8_t *d, uint8_t *e, uint8_t *f)
 {
    uint8_t Sec1 =0, Sec2 =0, Hour1 = 0, Hour2 = 0, Min1 = 0, Min2 = 0;
@@ -368,86 +340,60 @@ void timeToDigitParser(uint8_t clock1, uint8_t clock2, uint8_t *digit1, uint8_t 
 
 uint8_t detect()
 {
-   globalDetectNumber = 0;
-   if((PIND & 0x0F) == 0x0e)
-      return 10;        //means enter switch is pressed
-   else if((PIND & 0x0F) == 0x0d)
-      return 11;        //means Cancel switch is pressed
-   else if((PIND & 0x0F) == 0x0b) //means + is pressed
+   uint8_t scan[] = {0x3F, 0x5F, 0x6F, 0x77 };   //011 1111 , 101 1111, 110 1111, 111 0..
+   for(uint8_t  i = 0; i < 4; i++ )
    {
-      uint8_t temp = 0;
-         while(1)
-         {
-            insideDetectNumParser(temp);
-            seven_disp();
-            if((PIND & 0x0F) == 0x0e)
-            {
-               waitFlag = true;
-               globalDetectNumber = temp;
-               return globalDetectNumber;
-            }
-            
-            
-            if((PIND & 0x0F) == 0x07 && temp == 0)
-               temp = 10;
-            if((PIND & 0x0F) == 0x07 )
-               temp--;
-            if((PIND & 0x0F) == 0x0b && temp == 9)
-               temp = -1;
-            if((PIND & 0x0F) == 0x0b)
-               temp++;
-            
-            while((PIND & 0x0F) == 0x07);
-            while((PIND & 0x0F) == 0x0b);
+      PORTD = scan[i];
+      _delay_us (100);
+      uint8_t val = PIND;
+      
+      uint8_t swVal = (val & 0x7F);
+      if(swVal != 0x7F )
+      {
+         switch(swVal)
+         {                                                                 //r1 r2 r3   r4 c1 c2 c3
+            case 0x75: //PORTA = numArrayDot[0];      //111 0101          //0
+                        return 0;
+                        break;
+            case 0x3B: //PORTA = numArrayDot[1];      //011 1011          //1
+                        return 1;            
+                        break;   
+            case 0x3D: //PORTA = numArrayDot[2];      //011 1101          //2
+                        return 2;            
+                        break;
+            case 0x3E: //PORTA = numArrayDot[3];      //011 1110         //3
+                        return 3;            
+                        break;
+            case 0x5B: //PORTA = numArrayDot[4];      //101 1011          4
+                        return 4;            
+                        break;
+            case 0x5D: //PORTA = numArrayDot[5];      //101 1101           5  
+                        return 5;            
+                        break;   
+            case 0x5E: //PORTA = numArrayDot[6];      //101 1110          6
+                        return 6;            
+                        break;
+            case 0x6B: //PORTA = numArrayDot[7];      //110 1011         7
+                        return 7;            
+                        break;
+            case 0x6D: //PORTA = numArrayDot[8];      //110 1101          8
+                        return 8;            
+                        break;
+            case 0x6E: //PORTA = numArrayDot[9];      //110 1110          9
+                        return 9;            
+                        break;
+            case 0x73: //PORTA = numArrayDot[10];      //111 0011          10 *
+                        return 10;            
+                        break;
+            case 0x76: //PORTA = numArrayDot[11];      //111 0110          11 #
+                        return 11;            
+                        break; 
          }
+      }
    }
-   else if((PIND & 0x0F) == 0x07) //means - is pressed
-   {
-         uint8_t temp = 10;
-         while(1)
-         {
-            insideDetectNumParser(temp);
-            seven_disp();
-            if((PIND & 0x0F) == 0x0e)
-            {
-               waitFlag = true;
-               globalDetectNumber = temp;
-               return globalDetectNumber;
-            }
-            
-            if((PIND & 0x0F) == 0x07 && temp == 0)
-               temp = 10;
-            if((PIND & 0x0F) == 0x07 )
-               temp--;
-            if((PIND & 0x0F) == 0x0b && temp == 9)
-               temp = -1;
-            if((PIND & 0x0F) == 0x0b)
-               temp++;
-            
-            while((PIND & 0x0F) == 0x07);
-            while((PIND & 0x0F) == 0x0b);
-            
-         }
-   }
-   //else
-      //return 50;        //means no switch is pressed clear the flag
-   waitFlag = false;
-   return 50;
+   return 50;        //means no switch is pressed clear the flag
 }
 
-bool detectEnter()
-{
-   if((PIND & 0x0F) == 0x0e)
-      return true; 
-   return false;
-}
-
-bool detectCancel()
-{
-   if((PIND & 0x0F) == 0x0d)
-      return true; 
-   return false;
-}
 
 void detectDebounce()
 {
@@ -460,6 +406,31 @@ void detectDebounce()
       if (temp == 0x07)
          break;
    } 
+}
+
+bool detectEnterExit()
+{
+   uint8_t temp;
+   while(1) //check *
+   {
+      //detecting button press for numbers
+      temp =  detect();
+
+      if(temp == 10)     //pressed *
+      {
+         return true;
+      }
+      else if(temp == 11)     //pressed *
+      {
+         return false;
+      }
+      else 
+      {
+         
+      }
+      seven_disp();
+     // detectDebounce();
+   }
 }
 
 uint8_t setEntry(uint8_t *cap1, uint8_t *cap2, uint8_t *cap3, uint8_t *cap4)
@@ -514,7 +485,7 @@ uint8_t setEntry(uint8_t *cap1, uint8_t *cap2, uint8_t *cap3, uint8_t *cap4)
                capturedNumbers[3] = 0;                                             
             }
          _delay_ms (10);
-         //-----------------------------------------don't display the entered num if ot of range-------------------
+         //-----------------------------------------dont display the entered num if ot of range-------------------
          //if( ( /**/(capturedNumbers[0] < 3 && capturedNumbers[1] < 4) || (capturedNumbers[0] < 2 && capturedNumbers[1] < 10) /**/ ) && capturedNumbers[2] < 6 && capturedNumbers[3] < 10)
          {
             parser(capturedNumbers[0], capturedNumbers[1], capturedNumbers[2], capturedNumbers[3], 0, 1, 0, 0);
@@ -697,7 +668,7 @@ void eepromSetManualTime(uint8_t output, uint8_t slotNo)
    while(1)
    {
       seven_disp();
-      if((detect() == 10) && !waitFlag)
+      if(detect() == 10)
          break;
    }
    
@@ -775,20 +746,19 @@ void eepromDisplayNclear(uint8_t output, uint8_t slotNo, uint8_t onHr, uint8_t o
          showOnOff = showOnOff ^ 1;
          _delay_ms (500);
       }
-      if(temp == 11)     //pressed *
+      else if(temp == 11)     //pressed *
       {
          break;
       }
-      if(temp == 0)     //pressed 0 for clearing time entry to 88(invalid)
+      else if(temp == 0)     //pressed 0 for clearing time entry to 88(invalid)
       {
          bool clearFlag = false;
          hexParser(letterC, letterL, letterR, questionMark);   //C   L  R  ?
          while(1)
          {
-            temp = detect();
-            if(temp == 1)
+            if(detect() == 10)
                {clearFlag = true; break;}
-            if(temp == 0)
+            if(detect() == 11)
                {clearFlag = false; break;}
             seven_disp();
          }
@@ -799,9 +769,6 @@ void eepromDisplayNclear(uint8_t output, uint8_t slotNo, uint8_t onHr, uint8_t o
             EEPROMwrite(op1offHrAddr[slotNo], 88);
             EEPROMwrite(op1offMinAddr[slotNo], 88);
             readMemorySaved();
-            clearFlag = false;
-            _delay_ms (500);
-            break;
          }
          else if (output == 2 && clearFlag)
          {
@@ -810,21 +777,12 @@ void eepromDisplayNclear(uint8_t output, uint8_t slotNo, uint8_t onHr, uint8_t o
             EEPROMwrite(op2offHrAddr[slotNo], 88);
             EEPROMwrite(op2offMinAddr[slotNo], 88);
             readMemorySaved();
-            clearFlag = false;
-            _delay_ms (500);
-            break;
          }
-         if(temp == 11)
-            break;
-      }
-      if(temp == 9)     //pressed 9 to entry some input
-      {
-         eepromSetManualTime(output, slotNo);
          break;
       }
-      
-      if(temp == 8)     //pressed 8 to just back to upper layer
+      else if(temp == 9)     //pressed 9 to entry some input
       {
+         eepromSetManualTime(output, slotNo);
          break;
       }
          
@@ -835,112 +793,129 @@ void eepromDisplayNclear(uint8_t output, uint8_t slotNo, uint8_t onHr, uint8_t o
 void eepromInit()
 {
    bool checkStep1 = false;
-
+   parser(9, 1, 0, 1, 0, 0, 0, 0);
    uint8_t temp, outputSelect = 0;
-   
-   
-   while(1) //check op 1 or op2  ????
+   while(1) //check *
    {
-      if(outputSelect == 0)
-         hexParser(letterE, letterN, letterT, letterR);
       //detecting button press for numbers
-      temp = detect();
-      if(temp == 1)     //pressed *
+      temp =  detect();
+      if(temp == 10)     //pressed *
       {
-         outputSelect = 1;
+         checkStep1 = true;
+         break;
       }
-      if(temp == 2)     //pressed *
-      {
-         outputSelect = 2;
-      }
-      if(temp == 11)     //pressed *
+      else if(temp == 11)     //pressed *
       {
          break;
       }
-      
-      if(outputSelect == 1)
+      else 
       {
-         hexParser(0xC0, 0x8C, 0xBF, 0xF9);
-         if(detect() == 10 && !waitFlag)   
-            break;
-      }
          
-      if(outputSelect == 2)
-         {
-            hexParser(0xC0, 0x8C, 0xBF, 0xA4);   //OP-1 or OP-2 should be diplayed
-            if(detect() == 10 && !waitFlag)   
-               break;
-         }
+      }
       seven_disp();
-      
-      //if(temp == 10 && !waitFlag)
-      //{
-         //break;
-      //}
    }
    
-   if(outputSelect == 1 || outputSelect == 2)
+      parser(9, 1, 0, 2, 0, 0, 0, 0);
+   if(checkStep1)
    {
-      while(1)
-         {
-            hexParser(letterS, letterL, letterO, letterT);
-            seven_disp();
-         
-            temp =  detect();
-            PORTA = dash;  //----
-            uint8_t onHr, onMin, offHr, offMin;
 
-            switch(temp)
-            {
-               case 1:  //show 1st on & off  - hr.min
-                  {
-                     readOpSlot(outputSelect, 1, &onHr, &onMin, &offHr, &offMin);
-                     eepromDisplayNclear(outputSelect, 1, onHr, onMin, offHr, offMin);
-                  }
-                  break;
-               case 2:
-                  {
-                     readOpSlot(outputSelect, 2, &onHr, &onMin, &offHr, &offMin);
-                     eepromDisplayNclear(outputSelect, 2, onHr, onMin, offHr, offMin);
-                  }
-                  break;
-               case 3:
-                  {
-                     readOpSlot(outputSelect, 3, &onHr, &onMin, &offHr, &offMin);
-                     eepromDisplayNclear(outputSelect, 3, onHr, onMin, offHr, offMin);
-                  }
-                  break;
-               case 4:
-                  {
-                     readOpSlot(outputSelect, 4, &onHr, &onMin, &offHr, &offMin);
-                     eepromDisplayNclear(outputSelect, 4, onHr, onMin, offHr, offMin);
-                  }
-                  break;
-               case 5:
-                  {
-                     readOpSlot(outputSelect, 5, &onHr, &onMin, &offHr, &offMin);
-                     eepromDisplayNclear(outputSelect, 5, onHr, onMin, offHr, offMin);
-                  }
-                  break;
-               case 6:
-                  {
-                     readOpSlot(outputSelect, 6, &onHr, &onMin, &offHr, &offMin);
-                     eepromDisplayNclear(outputSelect, 6, onHr, onMin, offHr, offMin);
-                  }
-                  break;
-               case 7: break; 
-            }//switch   //*/
+      while(1) //check op 1 or op2  ????
+      {
+         //detecting button press for numbers
+         temp =  detect();
+         if(temp == 1)     //pressed *
+         {
+            outputSelect = 1;
+            break;
+         }
+         else if(temp == 2)     //pressed *
+         {
+            outputSelect = 2;
+            break;
+         }
+         else if(temp == 11)     //pressed *
+         {
+            break;
+         }
+         else 
+         {
             
-            if(detect() == 11)
+         }
+         seven_disp();
+      }
+   }
+   
+   if(outputSelect == 1 || outputSelect==2)
+   {
+      if(outputSelect == 1)
+         hexParser(0xC0, 0x8C, 0xBF, 0xF9);
+      if(outputSelect == 2)
+         hexParser(0xC0, 0x8C, 0xBF, 0xA4);   //OP-1 or OP-2 should be diplayed
+         
+      while(1)
+      {
+         if(detectEnterExit())
+            break;
+         seven_disp();
+      }
+      
+      while(1) //display every entries as per the input
+      {
+         temp =  detect();
+         PORTA = dash;  //----
+         uint8_t onHr, onMin, offHr, offMin;
+         //uint8_t seg1, seg2, seg3, seg4;
+         switch(temp)
+         {
+            case 1:  //show 1st on & off  - hr.min
+               {
+                  readOpSlot(outputSelect, 1, &onHr, &onMin, &offHr, &offMin);
+                  eepromDisplayNclear(outputSelect, 1, onHr, onMin, offHr, offMin);
+               }
                break;
-         }//while on off shw time
-   }//end output cond*/
+            case 2:
+               {
+                  readOpSlot(outputSelect, 2, &onHr, &onMin, &offHr, &offMin);
+                  eepromDisplayNclear(outputSelect, 2, onHr, onMin, offHr, offMin);
+               }
+               break;
+            case 3:
+               {
+                  readOpSlot(outputSelect, 3, &onHr, &onMin, &offHr, &offMin);
+                  eepromDisplayNclear(outputSelect, 3, onHr, onMin, offHr, offMin);
+               }
+               break;
+            case 4:
+               {
+                  readOpSlot(outputSelect, 4, &onHr, &onMin, &offHr, &offMin);
+                  eepromDisplayNclear(outputSelect, 4, onHr, onMin, offHr, offMin);
+               }
+               break;
+            case 5:
+               {
+                  readOpSlot(outputSelect, 5, &onHr, &onMin, &offHr, &offMin);
+                  eepromDisplayNclear(outputSelect, 5, onHr, onMin, offHr, offMin);
+               }
+               break;
+            case 6:
+               {
+                  readOpSlot(outputSelect, 6, &onHr, &onMin, &offHr, &offMin);
+                  eepromDisplayNclear(outputSelect, 6, onHr, onMin, offHr, offMin);
+               }
+               break;
+            case 11:
+               break;
+         }//switch
+         if(temp == 0)
+            break;
+      }//while on off shw time
+   }//end output cond
 }
 
 void relayFunction()
 {
    //checking relay PC3 & PC4
-   for(uint8_t checker = 1; checker <= totalOpSlots; checker++)   //op1 should on below cond or off, if on then break come next time
+   for(uint8_t checker = 0; checker < totalOpSlots; checker++)   //op1 should on below cond or off, if on then break come next time
    { //Sec , Hour, Min
       if(op1onHr[checker] < op1offHr[checker])
       {
@@ -977,7 +952,7 @@ void relayFunction()
       }
    }
    
-   for(uint8_t checker = 1; checker <= totalOpSlots; checker++)   //op2
+   for(uint8_t checker = 0; checker < totalOpSlots; checker++)   //op2
    { //Sec , Hour, Min
       if(op2onHr[checker] < op2offHr[checker])
       {
@@ -1054,43 +1029,6 @@ void initTimer()
    TIMSK = (1 << TOIE1) ;   // Enable timer1 overflow interrupt(TOIE1)
 }
 
-void showMenu()
-{
-   uint8_t temp = 0;
-   while(1)
-   {
-         if(detect() == 11)
-            break;
-         if(globalDetectNumber == 1)
-         {
-            temp = 1;
-            globalDetectNumber = 0;
-         }
-         
-         if(globalDetectNumber == 2)
-         {
-            temp = 2;
-            globalDetectNumber = 0;
-         }
-         
-         seven_disp();
-                  
-         switch(temp)
-         {
-               case 0 : hexParser(letterC, letterH, letterO, letterS);
-               break;
-               case 1 : hexParser(letterC, letterL, dash, dash);
-                        if(detect() == 10 && !waitFlag)
-                           setTime();
-               break;
-               case 2 : hexParser(letterO, letterP, dash, questionMark);
-                        if(detect() == 10 && !waitFlag)
-                           eepromInit();
-               break;
-         }
-   }
-}
-
 int main()
 {
    readMemorySaved();
@@ -1159,8 +1097,7 @@ int main()
             { counterVal = 0; Sec = 0; Min = 0; Hour = 0; }
          else{
             //start switch presssed...so setting time
-            //setTime();
-            showMenu();
+            setTime();
          }
       }
       if(detect() == 11)
@@ -1172,17 +1109,12 @@ int main()
       if(detect() == 1)
       {
          //decide if seven segment should be on or off
-         //setDisplayOn();
-         parser(5, 5, 5, 5, 0, 1, 0, 0);
-         while(1)
-         {
-            seven_disp();
-         }
+         setDisplayOn();
       }
       if(detect() == 0)
       {
          //Write to EEPROM memory if 0 pressed
-          eepromInit();
+         eepromInit();
       }
       //end of keystrokes logic------------
       

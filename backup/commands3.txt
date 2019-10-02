@@ -1,0 +1,753 @@
+    1  sudo apt autoremove mathematica
+    2  sudo apt autoremove wolfram-engine
+    3  cat /etc/wpa_supplicant/wpa_supplicant.conf 
+    4  sudo apt autoremove office
+    5  sudo apt autoremove libre-office
+    6  sudo apt autoremove libre
+    7  sudo apt autoremove libreoffice
+    8  sudo apt-get update
+    9  sudo apt search vnc
+   10  sudo dpkg -i VNC-Viewer-6.19.715-Linux-ARM.deb 
+   11  ifconfig
+   12  ifconfig eth0
+   13  sudo rapsi-config
+   14  sudo raspi-config
+   15  lsusb
+   16  dmesg
+   17  ls /var/cache/apt/archives/
+   18  sudo apt-get install avrdude
+   19  sudo apt-get update
+   20  ping google.com
+   21  ls /dev
+   22  dmesg
+   23  sudo apt-get install avrdude
+   24  ls /var/cache/apt/archives/
+   25  sudo cp /var/cache/apt/archives/* ~/Downloads/9Debs/
+   26  mkdr ~/Downloads/9Debs/avrdude
+   27  mkdir ~/Downloads/9Debs/avrdude
+   28  ls /var/cache/apt/archives/
+   29  sudo apt clean
+   30  mkdir ~/Downloads/9Debs/avrdude
+   31  ls /var/cache/apt/archives/
+   32  avrdude -c usbasp -p m16
+   33  sudo echo "SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", SYSFS{idVendor}=="16c0", SYSFS{idProduct}=="05dc", MODE="0666"" /etc/udev/rules.d/99-USBasp.rules
+   34  ls /etc/udev/rules.d/
+   35  sudo echo "SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", SYSFS{idVendor}=="16c0", SYSFS{idProduct}=="05dc", MODE="0666"" > /etc/udev/rules.d/99-USBasp.rules
+   36  sudo echo "SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", SYSFS{idVendor}=="16c0", SYSFS{idProduct}=="05dc", MODE="0666"" > 99-USBasp.rules
+   37  ls
+   38  sudo mv 99-USBasp.rules /etc/udev/rules.d/
+   39  ls
+   40  ls /etc/udev/rules.d/
+   41  /etc/init.d/udev restart
+   42  avrdude -c usbasp -p m16
+   43  sudo avrdude -c usbasp -p m16
+   44  sudo raspi-config
+   45  exit
+   46  ifconfig eth0
+   47  mkdir Downloads/9Debs/transmission
+   48  sudo apt-get install transmission-daemon
+   49  sudo cp /var/cache/apt/archives/* ~/Downloads/9Debs/transmission/
+   50  ls /var/cache/apt/archives/
+   51  sudo apt clean
+   52  ls /var/cache/apt/archives/
+   53  sudo systemctl stop transmission-daemon.service 
+   54  sudo nano /etc/transmission-daemon/settings.json 
+   55  mkdir torrent
+   56  sudo nano /etc/transmission-daemon/settings.json 
+   57  sudo systemctl restart transmission-daemon.service
+   58  sudo systemctl status transmission-daemon.service
+   59  sudo usermod -a -G debian-transmission pi
+   60  sudo chgrp debian-transmission /home/pi/torrent/
+   61  sudo chmod 770 /home/pi/torrent/
+   62  sudo service transmission-daemon stop
+   63  sudo nano /etc/transmission-daemon/settings.json
+   64  sudo service transmission-daemon start
+   65  sudo apt-get install gcc-avr binutils-avr gdb-avr avr-libc
+   66  mkdir Downloads/9Debs/gcc-avr-binutilsavr-gdbavr-avrlibc
+   67  sudo cp /var/cache/apt/archives/* ~/Downloads/9Debs/gcc-avr-binutilsavr-gdbavr-avrlibc/
+   68  ls Downloads/9Debs/gcc-avr-binutilsavr-gdbavr-avrlibc/
+   69  sudo apt clean
+   70  ifconfig wlan0
+   71  sudo nano /etc/wpa_supplicant/wpa_supplicant.conf 
+   72  sudo reboot
+   73  sudo sudo poweroff
+   74  cd /home/pi/Documents/embedded/001_gpio_onoff
+   75  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   76  nano 001_seven_segs_onoff.c 
+   77  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   78  ls
+   79  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+   80  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+   81  nano 001_seven_segs_onoff.c 
+   82  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   83  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+   84  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+   85  nano 001_seven_segs_onoff.c 
+   86  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   87  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+   88  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+   89  nano 001_seven_segs_onoff.c 
+   90  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   91  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+   92  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+   93  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   94  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+   95  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+   96  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+   97  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+   98  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+   99  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  100  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  101  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  102  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  103  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  104  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  105  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  106  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  107  avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  108  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  109  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  110  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  111  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  112  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  113  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  114  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  115  avrdude -c usbasp -p atmega16 -U hfuse:w:<0xD9>:m
+  116  avrdude -c usbasp -p atmega16 -U hfuse:w:0xD9:m
+  117  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  118  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  119  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  120  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  121  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  122  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  123  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  124  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  125  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  126  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  127  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  128  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  129  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  130  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  131  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  132  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  133  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  134  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  135  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  136  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  137  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  138  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  139  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  140  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  141  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  142  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  143  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  144  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  145  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  146  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  147  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  148  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  149  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  150  DF -H
+  151  df -h
+  152  sudo sudo poweroff
+  153  cd Documents/embedded/001_gpio_onoff/
+  154  ls
+  155  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  156  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  157  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  158  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  159  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  160  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  161  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  162  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  163  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  164  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  165  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  166  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  167  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  168  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  169  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  170  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  171  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  172  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  173  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  174  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  175  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  176  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  177  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  178  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  179  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  180  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  181  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  182  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  183  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  184  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  185  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  186  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  187  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  188  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  189  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  190  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  191  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  192  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  193  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  194  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c 
+  195  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  196  avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  197  ls & cat *
+  198  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  199  ls
+  200  rm main.bin main.hex 
+  201  ls
+  202  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  203  ls
+  204  avr-gcc -Wall -g -Os -mmcu=atmega16 -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  205  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  206  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p atmega16a -c usbasp -U flash:w:main.hex:i -F -P usb
+  207  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p atmega16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  208  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p m161 -c usbasp -U flash:w:main.hex:i -F -P usb
+  209  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p m16 -c usbasp -U flash:w:main.hex:i -F -P usb
+  210  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p m161 -c usbasp -U flash:w:main.hex:i -F -P usb
+  211  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  212  mkdir 001
+  213  cd 001/
+  214  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  215  cd ..
+  216  cd g
+  217  cd 001_gpio_onoff/
+  218  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c & avr-objcopy -j .text -j .data -O ihex main.bin main.hex & avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  219  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  220  cd 001/
+  221  ls
+  222  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c 
+  223  ls
+  224  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  225  avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  226  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c 
+  227  ls
+  228  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c
+  229  avr-objcopy -j .text -j .data -O ihex main.bin main.hex
+  230  avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  231  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin 001_seven_segs_onoff.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  232  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  233  history > commands.txt
+  234  ls
+  235  cat commands.txt 
+  236  exit
+  237  ping google.com
+  238  cd Documents/embedded/001_gpio_onoff/001/
+  239  ls
+  240  git status
+  241  git push -u origin master
+  242  git status
+  243  git add .
+  244  git status
+  245  git commit -m "sevensegment integer parser to constant display"
+  246  git push -u origin master
+  247  git status
+  248  git add .
+  249  git commit -m "7seg parser clockWiseDisplay"
+  250  git push -u origin master
+  251  ping google.com
+  252  git status
+  253  git add .
+  254  git commit -m "switch test with sevensegs"
+  255  git push -u origin master
+  256  git status
+  257  git add .
+  258  git commit -m "set time yes display"
+  259  git push -u origin master
+  260  cd Documents/embedded/001_gpio_onoff/001/
+  261  ls
+  262  echo "# rtc-time-segment" >> README.md
+  263  git init
+  264  ls
+  265  git add README.md
+  266  git commit -m "first commit"
+  267  git config --global user.email "niliptasatapathy@gmail.com"
+  268  git config --global user.name "nilipta"
+  269  git commit -m "first commit"
+  270  git remote add origin https://github.com/nilipta/rtc-time-segment.git
+  271  git push -u origin master
+  272  git status
+  273  git add .
+  274  git status
+  275  git push -u origin master
+  276  git status
+  277  git commit -m "sevensegment 0 to 9999"
+  278  git push -u origin master
+  279  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  280  cp main_parser.hex ./backup/
+  281  ls
+  282  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin test_sw_seg.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  283  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  284  history > command2.txt
+  285  ls
+  286  ifconfig eth0
+  287  sudo poweroff
+  288  cd Documents/embedded/001_gpio_onoff/001/
+  289  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  290  ls
+  291  mv main.hex min_rdyLabelFixed.hex
+  292  ls
+  293  rm main.bin 
+  294  ls
+  295  mv min_rdyLabelFixed.hex ./backup/
+  296  ls
+  297  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c i2c.c rtc3231.c
+  298  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c
+  299  ls
+  300  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c
+  301  cat rtc3231.h
+  302  nano rtc3231.h
+  303  cat rtc3231.h
+  304  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c
+  305  ls
+  306  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  307  avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  308  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  309  avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  310  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  311  sudo poweroff
+  312  cd Documents/embedded/001_gpio_onoff/001/
+  313  ls
+  314  git status
+  315  git add .
+  316  git commit -m "ready status at front"
+  317  git push -u origin master
+  318  git status
+  319  git add .
+  320  git commit -m "just copied not linked trc code"
+  321  git push -u origin master
+  322  i2cdetect -y 1
+  323  sudo raspi-config
+  324  i2cdetect -y 1
+  325  i2cdetect -y 0
+  326  sudo i2cdetect -y -r 1
+  327  sudo i2cdetect -y -r 2
+  328  sudo i2cdetect -y -r 1
+  329  cd Documents/embedded/001_gpio_onoff/001/
+  330  ls
+  331  cat rtc3231.c
+  332  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  333  avrdude -c usbasp -p atmega16 -U lfuse:w:0xE4:m
+  334  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  335  avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  336  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  337  sudo poweroff
+  338  avrdude -c usbasp -p atmega16 -U lfuse:w:0xE3:m
+  339  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  340  cd Documents/embedded/001_gpio_onoff/001/
+  341  ls
+  342  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  343  exit
+  344  cd Documents/embedded/001_gpio_onoff/001/
+  345  ls
+  346  git status
+  347  git add .
+  348  git commit -m "Second shown with ds3231.."
+  349  git push origin master
+  350  git status
+  351  git add .
+  352  git commit -m "Second min hour display"
+  353  git push origin master
+  354  git status
+  355  git add .
+  356  git commit -m "with timeparser sec, min,hour"
+  357  git push origin master
+  358  cd Documents/embedded/001_gpio_onoff/001/
+  359  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  360  echo > gitsteps.txt
+  361  ls
+  362  nano gitsteps.txt 
+  363  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  364  exit
+  365  cd Documents/embedded/001_gpio_onoff/001/
+  366  ls
+  367  git status
+  368  git add .
+  369  git commit -m "changed view hr-min and min-sec"
+  370  git push origin master
+  371  git status
+  372  git add .
+  373  git status
+  374  git commit -m "Added yes message for setting time"
+  375  git push origin master
+  376  git status
+  377  git add .
+  378  git status
+  379  git commit -m "Added fixed hardcoded settime to * button"
+  380  git push origin master
+  381  git status
+  382  git add .
+  383  git status
+  384  git commit -m "set hour min through keyboard to rtc on seven segment"
+  385  git push origin master
+  386  git status
+  387  git add .
+  388  git status
+  389  git commit -m "realy operatoted 21.00-21.05"
+  390  git push origin master
+  391  cd Documents/embedded/001_gpio_onoff/001/
+  392  ls
+  393  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  394  avrdude -p m162 -c usbasp -v
+  395  avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  396  exit
+  397  cd Documents/embedded/001_gpio_onoff/001/
+  398  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  399  sudo poweroff 
+  400  ifconfig eth0
+  401  cd Documents/embedded/001_gpio_onoff/001/
+  402  ls
+  403  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  404  cat main
+  405  cat main.c
+  406  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  407  exit
+  408  cd Documents/embedded/001_gpio_onoff/001/
+  409  ls
+  410  echo "avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb " > comboCommand.txt
+  411  ls
+  412  sudo poweroff 
+  413  cd Documents/embedded/001_gpio_onoff/001/
+  414  ls
+  415  git status
+  416  git add .
+  417  git status
+  418  git commit -m "added display on off functionality with 24 hour time set fix"
+  419  git push origin master
+  420  sudo poweroff 
+  421  cd Documents/embedded/001_gpio_onoff/001/
+  422  sudo poweroff 
+  423  cd Documents/embedded/001_gpio_onoff/001/
+  424  ifconfig eth0
+  425  ls
+  426  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  427  sudo poweroff 
+  428  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c
+  429  cd Documents/embedded/001_gpio_onoff/001/
+  430  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c
+  431  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  432  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c
+  433  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  434  ls
+  435  git status
+  436  git add .
+  437  git status
+  438  git commit -m "Simulated eeprom entry read clear with dipslay timestamp"
+  439  git push origin master
+  440  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  441  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c 
+  442  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  443  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c 
+  444  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  445  git status
+  446  git add .
+  447  git status
+  448  git commit -m "Realy operated samehour diff minute from eeprom tested with reset."
+  449  git push origin master
+  450  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  451  git status
+  452  git add .
+  453  git status
+  454  git commit -m "fixed defect to on both relays at their time settings"
+  455  git push origin master
+  456  cat ../#commands.txt 
+  457  avrdude -c usbasp -p atmega16 -U hfuse:w:0xD1:m
+  458  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  459  ls /var/cache/apt/archives/
+  460  sudo apt-get install gnome-disk-utility
+  461  sudo cp /var/cache/apt/archives/* ~/Downloads/9Debs/
+  462  sudo apt clean
+  463  sudo poweroff 
+  464  sudo poweroff
+  465  cd Documents/embedded/001_gpio_onoff/001/
+  466  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  467  nano main.
+  468  nano main.c 
+  469  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c
+  470  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  471  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c
+  472  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  473  git status
+  474  git add .
+  475  git status
+  476  git commit -m "fixed onoff relay logic, tested with multi reset, added just timer without rtc"
+  477  git push remote origin
+  478  git push origin master
+  479  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  480  git status
+  481  git add .
+  482  git status
+  483  git commit -m "fixed display and switch isssue..so working correctly"
+  484  git push origin master
+  485  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  486  git status
+  487  git add .
+  488  git commit -m "tested with 23.59 and 00.03 timing on off..working"
+  489  git status
+  490  git add .
+  491  git status
+  492  git add .
+  493  git status
+  494  git add .
+  495  git status
+  496  git commit -m "tested with 23.59 and 00.03 timing on off..working"
+  497  git push origin master
+  498  ping google.com
+  499  git push origin master
+  500  git status
+  501  git add .
+  502  git status
+  503  git commit -m "tested with 23.59 and 00.03 timing on off..working...corrected prev commit"
+  504  git push origin master
+  505  sudo poweroff 
+  506  sudo mkdir /mnt/sshftps
+  507  ssh pi@169.254.38.82 /mnt/sshftps/
+  508  ssh pi@169.254.38.82 /mnt/sshftps
+  509  sudo systemctl stop transmission-daemon
+  510  sudo systemctl restart transmission-daemon
+  511  cd Videos/
+  512  ls
+  513  ping google.com
+  514  sudo apt-get install youtube-dl
+  515  ls /var/cache/apt/archives/
+  516  ls /var/cache/apt/archives/ -lh
+  517  cd Downloads/9Debs/_backup/
+  518  mkdir youtubedl
+  519  sudo cp /var/cache/apt/archives/ ./youtubedl/
+  520  sudo apt clean
+  521  sudo apt-get update
+  522  youtube-dl -f 22 https://www.youtube.com/watch?v=XkHV7ROmIVA
+  523  cd ~/Videos/
+  524  youtube-dl -f 22 https://www.youtube.com/watch?v=XkHV7ROmIVA
+  525  sudo poweroff
+  526  sudo poweroff 
+  527  git clone https://github.com/microsoft/vscode
+  528  node -v
+  529  ls
+  530  mkdir node
+  531  ls
+  532  cd node/
+  533  curl -sL https://deb.nodesource.com/setup_10.x> setup.sh
+  534  curl -sL https://deb.nodesource.com/setup_10.x > setup.sh
+  535  chmod +x setup.sh 
+  536  ./setup.sh 
+  537  sudo ./setup.sh 
+  538  sudo apt-get install -y nodejs
+  539  sudo cp /var/cache/apt/archives/nodejs_10.16.3-1nodesource1_armhf.deb ./
+  540  ls
+  541  sudo apt clean
+  542  cd ..
+  543  ls
+  544  mkdir yarn
+  545  cd yarn/
+  546  npm init --y
+  547  ls
+  548  npm install yarn
+  549  cd .
+  550  cd ..
+  551  mv yarn/ yaarn
+  552  cd yaarn/
+  553  ls
+  554  npm install yarn
+  555  nano package.json 
+  556  npm install yarn
+  557  nano ~/.bashrc 
+  558  ls
+  559  cd node_modules/
+  560  cd .bin/
+  561  ls
+  562  yarn -v
+  563  ./yarn
+  564  ./yarn -v
+  565  ./yarn -help
+  566  ./yarn --help
+  567  cd ../../
+  568  rm -r node_modules/
+  569  ls
+  570  rm package-lock.json 
+  571  rm yarn.lock 
+  572  ls
+  573  npm install
+  574  cd node_modules/.bin/
+  575  pwd
+  576  cwd
+  577  nano ~/.bashrc 
+  578  source ~/.bashrc 
+  579  cd ../../../
+  580  cd vscode/
+  581  ls
+  582  cd ..
+  583  zip -v
+  584  zip vscode.zip ./vscode/
+  585  zip --help
+  586  zip vscode
+  587  zip ./vscode vscode.zip
+  588  zip vscode.zip ./vscode/*
+  589  zip -r vscode.zip ./vscode/
+  590  clear
+  591  sudo apt-get install libx11-dev
+  592  sudo apt clean
+  593  yarn -v
+  594  cd vscode\ build/
+  595  cd vscode/
+  596  ls
+  597  ./scripts/npm.sh install --arch=armhf
+  598  sudo reboot
+  599  cd /home/pi/Documents/vscode build/vscode
+  600  cd /home/pi/Documents/vscode\build/vscode
+  601  cd /home/pi/Documents/vscode\ build/vscode
+  602  ls
+  603  ./scripts/npm.sh install --arch=armhf
+  604  ls
+  605  rm -r node_modules/
+  606  sudo find / -name "libsecret-1.pc"
+  607  sudo find / -name "libsecret*"
+  608  export PKG_CONFIG_PATH=/usr/lib/arm-linux-gnueabihf/
+  609  sudo find / -name "xkbfile*"
+  610  sudo find / -name "xkb*"
+  611  export PKG_CONFIG_PATH=/usr/lib/arm-linux-gnueabihf/pkgconfig/
+  612  free
+  613  sudo kill -9 3698
+  614  sudo apt-get install ntfs-3g
+  615  sudo apt-get install --fix-missing
+  616  sudo apt-get install ntfs-3g
+  617  sudo apt-get install ntfs-3g -y
+  618  ping google.com
+  619  sudo apt-get install ntfs-3g -y
+  620  ping google.com
+  621  sudo apt-get install ntfs-3g -y
+  622  sudo cp /var/cache/apt/archives/libntfs-3g871_1%3a2016.2.22AR.1+dfsg-1+deb9u1_armhf.deb Downloads/9Debs/_backup/ntfs/
+  623  cd Downloads/9Debs/_backup/ntfs/
+  624  sudo dpkg -i *
+  625  ls
+  626  sudo dpkg -i *
+  627  ifconfig
+  628  cd Documents/embedded/001_gpio_onoff/001/
+  629  ls
+  630  ifconfig
+  631  uname -ae
+  632  uname -a
+  633  cd Documents/embedded/001_gpio_onoff/001/
+  634  ls
+  635  cat comboCommand.txt 
+  636  cd ..
+  637  ls
+  638  cat \#commands.txt 
+  639  cd ..
+  640  avrdude -p atmega16 -c usbasp -F -P usb
+  641  avrdude -p atmega16 -c usbasp -F -P usb -v
+  642  avrdude -p atmega32a -c usbasp -F -P usb -v
+  643  avrdude -p atmega32 -c usbasp -F -P usb -v
+  644  avrdude -p atmega32 -c usbasp -P usb -v
+  645  avrdude -p atmega32 -c usbasp -v
+  646  avrdude -p atmega32a -c usbasp -F -P usb -v
+  647  avrdude -p atmega32 -c usbasp -F -P usb -v
+  648  avrdude -c usbasp -p atmega32 -P usb -U lfuse:r:-:i -v
+  649  avrdude -c usbasp -p atmega32 -P usb -U lfuse:r:-:i -v -F
+  650  avrdude -c usbasp -p atmega32 -P usb -b 9600 -U lfuse:r:-:i -v -F
+  651  avrdude -c usbasp -p atmega32 -P usb -b 4800 -U lfuse:r:-:i -v -F
+  652  avrdude -c usbasp -p atmega32 -P usb -b 19200 -U lfuse:r:-:i -v -F
+  653  mkdir 002
+  654  cd 002`
+  655  cd 002
+  656  history > 001.txt
+  657  ls
+  658  cat 001.txt 
+  659  cat 001.txt avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  660  avr-gcc -Wall -g -Os -mmcu=atmega32 -o main.bin 001.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  661  avr-gcc -Wall -g -Os -mmcu=atmega32 -o main.bin 001.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m32 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  662  avrdude -c usbasp -p atmega32 -U hfuse:w:0xD1:m
+  663  avr-gcc -Wall -g -Os -mmcu=atmega32 -o main.bin 001.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m32 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  664  avr-gcc -Wall -g -Os -mmcu=atmega32 -o main.bin 001.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  665  avr-gcc -Wall -g -Os -mmcu=atmega32 -o main.bin 001.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m3208 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  666  avr-gcc -Wall -g -Os -mmcu=atmega32 -o main.bin 001.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m3209 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  667  avr-gcc -Wall -g -Os -mmcu=atmega32 -o main.bin 001.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m32 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  668  sudo halt
+  669  ifconfig eth0
+  670  exit
+  671  cd Documents/embedded/002/
+  672  ls
+  673  avrdude -p atmega32 -c usbasp -F -P usb -v
+  674  ls
+  675  nano 001.c
+  676  avr-gcc -Wall -g -Os -mmcu=atmega32 -o main.bin 001.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m32 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  677  nano 001.c
+  678  avr-gcc -Wall -g -Os -mmcu=atmega32 -o main.bin 001.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m32 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  679  nano 001.c
+  680  avr-gcc -Wall -g -Os -mmcu=atmega32 -o main.bin 001.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m32 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  681  nano 001.c
+  682  avr-gcc -Wall -g -Os -mmcu=atmega32 -o main.bin 001.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m32 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  683  nano 001.c
+  684  avr-gcc -Wall -g -Os -mmcu=atmega32 -o main.bin 001.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m32 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  685  nano 001.c
+  686  avr-gcc -Wall -g -Os -mmcu=atmega32 -o main.bin 001.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m32 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  687  sudo halt
+  688  cd Documents/embedded/003Abhilipsa/
+  689  ls
+  690  avrdude -p atmega8 -c usbasp -F -P usb -v
+  691  avrdude -c usbasp -p atmega8 -U lfuse:w:0xE4:m
+  692  avrdude -p atmega8 -c usbasp -F -P usb -v
+  693  avr-gcc -Wall -g -Os -mmcu=atmega8 -o main.bin main.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m8 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  694  sudo poweroff 
+  695  cd Documents/
+  696  cd embedded/003Abhilipsa/
+  697  avrdude -p atmega8 -c usbasp -F -P usb -v
+  698  cd Documents/embedded/003Abhilipsa/
+  699  avrdude -p atmega8 -c usbasp -F -P usb -v
+  700  avr-gcc -Wall -g -Os -mmcu=atmega8 -o main.bin main.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m8 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  701  avrdude -p atmega8 -c usbasp -F -P usb -v
+  702  avr-gcc -Wall -g -Os -mmcu=atmega8 -o main.bin main.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m8 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  703  sudo poweroff
+  704  cd Documents/embedded/003Abhilipsa/
+  705  avr-gcc -Wall -g -Os -mmcu=atmega8 -o main.bin main.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m8 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  706  nano main.c
+  707  avr-gcc -Wall -g -Os -mmcu=atmega8 -o main.bin main.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m8 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  708  sudo poweroff
+  709  sudo halt
+  710  sudo poweroff
+  711  sudo poweroff 
+  712  cd Videos/
+  713  ls
+  714  youtube-dl --help
+  715  youtube-dl --help > yts.txt
+  716  youtube-dl -c -f 22 http://youtube.com/watch?v=PbJt7-a2274
+  717  cd Videos/
+  718  youtube-dl -c -F http://youtube.com/watch?v=PbJt7-a2274
+  719  youtube-dl -c -f https://www.youtube.com/watch?v=PbJt7-a2274
+  720  youtube-dl -c -f=22 https://www.youtube.com/watch?v=PbJt7-a2274
+  721  sudo curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
+  722  ls
+  723  which youtube-dl 
+  724  sudo curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/bin/youtube-dl
+  725  youtube-dl -c -f=22 https://www.youtube.com/watch?v=PbJt7-a2274
+  726  youtube-dl -c -f=22 "https://www.youtube.com/watch?v=PbJt7-a2274"
+  727  youtube-dl -c -f 22 URL https://www.youtube.com/watch?v=PbJt7-a2274
+  728  youtube-dl -c -f 22 https://www.youtube.com/watch?v=PbJt7-a2274
+  729  sudo poweroff 
+  730  sudo systemctl restart vncserver-x11-serviced.service 
+  731  sudo poweroff 
+  732  ifconfi wlan0
+  733  ifconfig wlan0
+  734  ifconfig
+  735  sudo nano /etc/wpa_supplicant/wpa_supplicant.conf 
+  736  sudo poweroff 
+  737  nano /home/pi/torrent/crawl.txt
+  738  cat /home/pi/torrent/crawl.txt
+  739  exit
+  740  sudo poweroff 
+  741  cd Documents/embedded/001_gpio_onoff/001/
+  742  ls
+  743  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c I2C.c rtc3231.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  744  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin switch4test.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  745  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  746  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin switch4test.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb
+  747  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  748  avrdude -p m162 -c usbasp -P usb
+  749  avr-gcc -Wall -g -Os -mmcu=atmega16a -o main.bin main.c ; avr-objcopy -j .text -j .data -O ihex main.bin main.hex ; avrdude -p m162 -c usbasp -U flash:w:main.hex:i -F -P usb 
+  750  sudo poweroff 
+  751  cd Documents/embedded/001_gpio_onoff/001/
+  752  history
+  753  history > backup/commands3.txt
