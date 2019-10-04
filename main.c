@@ -933,11 +933,11 @@ void relayFunction()
             { PORTC =   PINC & 0b11110111; break;} //masking that pin 0(ON) }
             if(Hour == op1offHr[checker] && Min <= op1offMin[checker])
             { PORTC =   PINC & 0b11110111; break;} //masking that pin 0(ON) }
-            if( Hour > op1onHr[checker] && Hour < op1offHr[checker])  
+            if( Hour > op1onHr[checker] || Hour < op1offHr[checker])  
             { PORTC =   PINC & 0b11110111; break;} //masking that pin 0(ON) }
          }
       }
-      if(checker == (totalOpSlots-1)) //coz loop starts from 0, totalOpSlots count from 1
+      if(checker == (totalOpSlots)) 
       {
          { PORTC =   PINC | 0b00001000;} //masking that pin 1(OFF) } //above conditions are failed to on the op..so off
       }
@@ -970,11 +970,11 @@ void relayFunction()
             { PORTC =   PINC & 0b11111011; break;} //masking op 2 (ON) }
             if(Hour == op2offHr[checker] && Min <= op2offMin[checker])
             { PORTC =   PINC & 0b11111011; break;} //masking op 2 (ON) }
-            if( Hour > op2onHr[checker] && Hour < op2offHr[checker])  
+            if( Hour > op2onHr[checker] || Hour < op2offHr[checker])  
             { PORTC =   PINC & 0b11111011; break;} //masking op 2 (ON) }
          }
       }
-      if(checker == (totalOpSlots-1)) //coz loop starts from 0, totalOpSlots count from 1
+      if(checker == (totalOpSlots)) //coz loop starts from 0, totalOpSlots count from 1
       {
          { PORTC =   PINC | 0b00000100;} //masking op 2 (OFF) }  //above conditions are failed to on the op..so off
       }
