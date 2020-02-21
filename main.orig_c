@@ -1,5 +1,5 @@
-#define F_CPU 8000000UL 
-//atmega32 processor -- inbuilt osc 8MHZ -- 4 switch mode
+#define F_CPU 4000000UL 
+
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdbool.h>
@@ -42,7 +42,6 @@ uint8_t Sec = 0 , Hour = 0, Min = 0;
 //enum view {hourMin, minSec};
 bool currentView = 0;   //0 for hr-min, 1 for min-sec
 bool rtcFlag = true;
-bool simulateRtcMenuOnTimer = false;  //this shows the menu action when rtc is unavailable.... 
 static volatile long counterVal = 3;
 
 uint8_t globalDetectNumber = 0;
@@ -55,8 +54,6 @@ uint8_t numArray[] = {0xC0 ,  0xF9 ,  0xA4 ,  0xB0 ,  0x99 ,  0x92 ,  0x82 ,  0x
 uint8_t segArray[]={0x70,0xB0, 0xD0, 0xE0};  //
 uint8_t posSeg[4] = {0x40, 0x79, 0x24, 0x30}; //0123 display
 
-#define enter 10
-#define cancel 11
 #define dash 0xBF
 #define totalOpSlots 6
 #define letterC 0xC6
@@ -73,23 +70,14 @@ uint8_t posSeg[4] = {0x40, 0x79, 0x24, 0x30}; //0123 display
 #define questionMark 0x2C
 
 //EEPROM section
-#define start_EEPROM_Addr 10
-uint8_t op1onHrAddr[] =   {start_EEPROM_Addr+0,  start_EEPROM_Addr+0, start_EEPROM_Addr+1, start_EEPROM_Addr+2, start_EEPROM_Addr+3, start_EEPROM_Addr+4, start_EEPROM_Addr+5};    //we r starting from 1...so keep 0 n 1 same
-uint8_t op1onMinAddr[] =  {start_EEPROM_Addr+6,  start_EEPROM_Addr+6, start_EEPROM_Addr+7, start_EEPROM_Addr+8, start_EEPROM_Addr+9, start_EEPROM_Addr+10, start_EEPROM_Addr+11};    //we r starting from 1...so keep 0 n 1 same
-uint8_t op1offHrAddr[] =  {start_EEPROM_Addr+12, start_EEPROM_Addr+12, start_EEPROM_Addr+13, start_EEPROM_Addr+14, start_EEPROM_Addr+15, start_EEPROM_Addr+16, start_EEPROM_Addr+17};    //we r starting from 1...so keep 0 n 1 same
-uint8_t op1offMinAddr[] = {start_EEPROM_Addr+18, start_EEPROM_Addr+18, start_EEPROM_Addr+19, start_EEPROM_Addr+20, start_EEPROM_Addr+21, start_EEPROM_Addr+22, start_EEPROM_Addr+23};    //we r starting from 1...so keep 0 n 1 same
-uint8_t op2onHrAddr[] =   {start_EEPROM_Addr+24, start_EEPROM_Addr+24, start_EEPROM_Addr+25, start_EEPROM_Addr+26, start_EEPROM_Addr+27, start_EEPROM_Addr+28, start_EEPROM_Addr+29};    //we r starting from 1...so keep 0 n 1 same
-uint8_t op2onMinAddr[] =  {start_EEPROM_Addr+30, start_EEPROM_Addr+30, start_EEPROM_Addr+31, start_EEPROM_Addr+32, start_EEPROM_Addr+33, start_EEPROM_Addr+34, start_EEPROM_Addr+35};    //we r starting from 1...so keep 0 n 1 same
-uint8_t op2offHrAddr[] =  {start_EEPROM_Addr+36, start_EEPROM_Addr+36, start_EEPROM_Addr+37, start_EEPROM_Addr+38, start_EEPROM_Addr+39, start_EEPROM_Addr+40, start_EEPROM_Addr+41};    //we r starting from 1...so keep 0 n 1 same
-uint8_t op2offMinAddr[] = {start_EEPROM_Addr+42, start_EEPROM_Addr+42, start_EEPROM_Addr+43, start_EEPROM_Addr+44, start_EEPROM_Addr+45, start_EEPROM_Addr+46, start_EEPROM_Addr+47};    //we r starting from 1...so keep 0 n 1 same
-
-//uint8_t op1onMinAddr[] = {16, 16, 17, 18, 19, 20, 21};   // starting 0 will make us write logic
-//uint8_t op1offHrAddr[] = {22, 22, 23, 24, 25, 26, 27};   // to fetch index from user as similar
-//uint8_t op1offMinAddr[] = {28, 28, 29, 30, 31, 32, 33};  //user not likes 0 as first
-//uint8_t op2onHrAddr[] = {34, 34, 35, 36, 37, 38, 39};    //
-//uint8_t op2onMinAddr[] = {40, 40, 41, 42, 43, 44, 45 };  //
-//uint8_t op2offHrAddr[] = {46, 46, 47, 48, 49, 50, 51};   //
-//uint8_t op2offMinAddr[] = {52, 52, 53, 54, 55, 56, 57};  //
+uint8_t op1onHrAddr[] = {10, 10, 11, 12, 13, 14, 15};    //we r starting from 1...so keep 0 n 1 same
+uint8_t op1onMinAddr[] = {16, 16, 17, 18, 19, 20, 21};   //
+uint8_t op1offHrAddr[] = {22, 22, 23, 24, 25, 26, 27};   //
+uint8_t op1offMinAddr[] = {28, 28, 29, 30, 31, 32, 33};  //
+uint8_t op2onHrAddr[] = {34, 34, 35, 36, 37, 38, 39};    //
+uint8_t op2onMinAddr[] = {40, 40, 41, 42, 43, 44, 45 };  //
+uint8_t op2offHrAddr[] = {46, 46, 47, 48, 49, 50, 51};   //
+uint8_t op2offMinAddr[] = {52, 52, 53, 54, 55, 56, 57};  //
 
 
 uint8_t op1onHr[] = {24, 24, 24, 24, 24, 24, 24};   //10 11 12 13 14 15
@@ -106,17 +94,15 @@ uint8_t op1ActualOff[6];
 uint8_t op2ActualOn[6];
 uint8_t op2ActualOff[6];
 
-
-//atmega32A
 /*****************************************************************************
             PB0               < 1                                40>   A         PA0
             PB1               < 2                                39>   B         PA1
             PB2               < 3                                38>   C         PA2
             PB3               < 4                                37>   D         PA3
             PB4               < 5                                36>   E         PA4
-MOSI        PB5               < 6                                35>   F         PA5
-MISO        PB6               < 7                                34>   G         PA6
-sck         PB7               < 8                                33>   H         PA7
+            PB5               < 6                                35>   F         PA5
+            PB6               < 7                                34>   G         PA6
+            PB7               < 8                                33>   H         PA7
             RST               < 9                                32>             REF
 vcc         VCC               <10                                31>             GND
 gnd         GND               <11                                30>             VCC
@@ -126,8 +112,8 @@ gnd         GND               <11                                30>            
             PD1    cancel     <15                                26>    D3       PC4
             PD2    ++++++     <16                                25>    op       PC3
             PD3    ------     <17                                24>    op       PC2
-            PD4               <18                                23>             PC1 SDA
-            PD5               <19                                22>             PC0 SCL
+            PD4               <18                                23>             PC1
+            PD5               <19                                22>             PC0
             PD6               <20                                21>             PD7
 *****************************************************************************/
 void setDate(uint8_t entered_Hr, uint8_t  entered_Min)
@@ -304,7 +290,6 @@ void insideDetectNumParser(uint8_t num) //what the number ex 12---- it will disp
       }
 }
 
-//args take hh mm ss as calcuated
 void timeParser(uint8_t *a, uint8_t *b, uint8_t *c, uint8_t *d, uint8_t *e, uint8_t *f)
 {
    uint8_t Sec1 =0, Sec2 =0, Hour1 = 0, Hour2 = 0, Min1 = 0, Min2 = 0;
@@ -387,12 +372,12 @@ uint8_t detect()
 {
    globalDetectNumber = 0;
    if((PIND & 0x0F) == 0x0e)
-      return enter;        //means enter switch is pressed
+      return 10;        //means enter switch is pressed
    else if((PIND & 0x0F) == 0x0d)
       {
         globalOneTimeCHeck = true;
         globalDisplayFlag = true;  
-        return cancel;        //means Cancel switch is pressed
+        return 11;        //means Cancel switch is pressed
       }
    else if((PIND & 0x0F) == 0x0b) //means + is pressed
    {
@@ -573,8 +558,7 @@ void  setTime()
             }
       makeHrFromInput = ((cap1 * 10) + cap2);
       makeMinFromInput = ((cap3 * 10) + cap4);
-      if(rtcFlag)
-         setDate(makeHrFromInput, makeMinFromInput);
+      setDate(makeHrFromInput, makeMinFromInput);
    }
 }
 
@@ -1031,25 +1015,9 @@ void initTimer()
     * 1024 prescale = 4000000 / 1024 = 3906
     * 65535 - 3906 = 61629
     * ***/
-   //TCCR1A = 0x00;
-   //TCCR1B = (1<<CS10) | (1<<CS12);;  // Timer mode with 1024 prescler
-   //TIMSK = (1 << TOIE1) ;   // Enable timer1 overflow interrupt(TOIE1) //When this bit is written to one, and the I-flag in the Status Register is set (interrupts globally enabled), the Timer/Counter1 Overflow Interrupt is enabled.
-   
-   // For Atmega32A only //although upper is right
    TCCR1A = 0x00;
-   TCCR1B = 0x05;  // Timer mode with 1024 prescler
-   TIMSK  = 0x04 ;   // Enable timer1 overflow interrupt(TOIE1)
-   
-   //TCCR1B 8  7  6  5  4  3  2  1 (these bits are 3 2 1))
-   //CS12        CS11        CS10           Description 
-   //0 0 0                                  No clock source (Timer/Counter stopped). 
-   //0 0 1                                  clkI/O/1 (No prescaling) 
-   //0 1 0                                  clkI/O/8 (From prescaler) 
-   //0 1 1                                  clkI/O/64 (From prescaler) 
-   //1 0 0                                  clkI/O/256 (From prescaler) 
-   //1 0 1                                  clkI/O/1024 (From prescaler) 
-   //1 1 0                                  External clock source on T1 pin. Clock on falling edge. 
-   //1 1 1                                  External clock source on T1 pin. Clock on rising edge.
+   TCCR1B = (1<<CS10) | (1<<CS12);;  // Timer mode with 1024 prescler
+   TIMSK = (1 << TOIE1) ;   // Enable timer1 overflow interrupt(TOIE1)
 }
 
 void showMenu()
@@ -1057,23 +1025,17 @@ void showMenu()
    uint8_t temp = 0;
    while(1)
    {
-         if(detect() == cancel)
+         if(detect() == 11)
             break;
-         if(globalDetectNumber == 1)   //for option 1 = set clock time
+         if(globalDetectNumber == 1)
          {
             temp = 1;
             globalDetectNumber = 0;
          }
          
-         if(globalDetectNumber == 2)   //for option 2 = set slot time setting
+         if(globalDetectNumber == 2)
          {
             temp = 2;
-            globalDetectNumber = 0;
-         }
-         
-         if(globalDetectNumber == 3)   //for option 2 = set slot time setting
-         {
-            temp = 3;
             globalDetectNumber = 0;
          }
          
@@ -1109,9 +1071,7 @@ int main()
    initTimer();
    globalDisplayFlag = !globalDisplayFlag;
    uint8_t anyTimerFlag = detect();
-   
-   //if any switch is pressed then the rtc module is diconnected..
-   if( anyTimerFlag == enter || anyTimerFlag == cancel || (anyTimerFlag <10 && anyTimerFlag >=0))
+   if( anyTimerFlag == 10 || anyTimerFlag == 11 || (anyTimerFlag <10 && anyTimerFlag >=0))
    {
       parser(5, 5, 5, 5, 0, 1, 0, 0);
       while(1)
@@ -1124,8 +1084,6 @@ int main()
    
    if(rtcFlag)
       init_ds3231();
-   else
-      sei();
    
    
    //local variables...
@@ -1160,21 +1118,17 @@ int main()
       }
       
       //uint8_t keyPress = detect();
-      if(detect() == enter)
+      if(detect() == 10)
       {
-         if(!rtcFlag && !simulateRtcMenuOnTimer)   //if timer is running * will reset the timer
+         if(!rtcFlag)   //if timer is running * will reset the timer
             { counterVal = 0; Sec = 0; Min = 0; Hour = 0; }
-         else if (!rtcFlag && simulateRtcMenuOnTimer)
-            {
-              showMenu();
-            } //*/
          else{
             //start switch presssed...so setting time
             //setTime();
             showMenu();
          }
       }
-      if(detect() == cancel)
+      if(detect() == 11)
       {
          //start switch presssed...so setting time
          currentView = currentView^1;
@@ -1195,18 +1149,17 @@ int main()
 }
 
 
-/* ISR (TIMER1_COMPA_vect)
-{
-//// action to be done every 1 sec
-counterVal++;
-} */
+//ISR (TIMER1_COMPA_vect)
+//{
+	//// action to be done every 1 sec
+	//counterVal++;
+//}
 
 
 ISR (TIMER1_OVF_vect)    // Timer1 ISR
 {
    //TCNT1 = 63974;   // for 1 sec at 16 MHz
-   //TCNT1 = 61629;   // for 1 sec at 16 MHz
-   TCNT1 = 57723;   // for 1 sec at 8 MHz in atmega32
+   TCNT1 = 61629;   // for 1 sec at 16 MHz
    counterVal++;
 }
 
